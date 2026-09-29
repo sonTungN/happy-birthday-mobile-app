@@ -1012,8 +1012,6 @@ function CameraFront({ ready, lit }: { ready: boolean; lit: boolean }) {
         {ready && (
           <span className="pointer-events-none absolute top-[54%] left-1/2 z-1 aspect-square w-[40%] -translate-1/2 animate-[lens-ping_1.6s_ease-out_infinite] rounded-[50%] border border-[rgba(248,246,240,0.7)]" />
         )}
-        {/* The selfie mirror beside the lens */}
-        <span className="camera-mirror absolute top-[44%] right-[8%] z-1 aspect-square w-[24%] rounded-[50%]" />
         {/* The lamp left of the lens: lit when it's her turn */}
         <span
           className={`absolute top-[52%] left-[13%] z-1 h-[8px] w-[8px] rounded-[50%] ${ready ? "bg-[#f4f1ea] shadow-[0_0_6px_2px_rgba(255,248,230,0.7)]" : "bg-[#3a3a3a] shadow-[inset_0_1px_1px_rgba(0,0,0,0.6)]"}`}

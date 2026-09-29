@@ -129,22 +129,8 @@ export function Marked({
       // line: the way to keep a circled phrase (which never breaks) at the start of a line
       className={`relative isolate whitespace-pre-line ${className ?? ""}`}
     >
-      {parts.map((part, i) =>
-        part.mark ? (
-          <mark
-            key={i}
-            ref={(el) => {
-              markRefs.current[i] = el;
-            }}
-            // A pen loop goes round the whole phrase in one go, so a circled phrase stays on one line
-            className={`bg-transparent p-0 text-inherit [font:inherit] ${part.mark === "circle" ? "whitespace-nowrap" : ""}`}
-          >
-            {part.text}
-          </mark>
-        ) : (
-          part.text
-        ),
-      )}
+      {/* The marks come before the text on purpose: after it, WebKit takes this out-of-flow layer for an
+          empty last line and justifies the real last line right across the column */}
       {strokes && (
         <span className="pointer-events-none absolute inset-0" aria-hidden>
           {strokes.map((s, i) =>
@@ -160,6 +146,22 @@ export function Marked({
             ),
           )}
         </span>
+      )}
+      {parts.map((part, i) =>
+        part.mark ? (
+          <mark
+            key={i}
+            ref={(el) => {
+              markRefs.current[i] = el;
+            }}
+            // A pen loop goes round the whole phrase in one go, so a circled phrase stays on one line
+            className={`bg-transparent p-0 text-inherit [font:inherit] ${part.mark === "circle" ? "whitespace-nowrap" : ""}`}
+          >
+            {part.text}
+          </mark>
+        ) : (
+          part.text
+        ),
       )}
     </Tag>
   );

@@ -651,29 +651,6 @@
       inset 0 0 0 1px rgba(255, 255, 255, 0.12);
   }
 
-  /* The little selfie mirror beside the lens, like on an Instax: her own face, live, while she frames the shot */
-  .camera-mirror {
-    background: radial-gradient(circle at 50% 40%, #3a3a38, #141414 75%);
-    box-shadow:
-      0 3px 8px rgba(0, 0, 0, 0.6),
-      inset 0 0 0 2px #c9c7c1,
-      inset 0 0 0 3px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Glass sheen over the mirror */
-  .camera-mirror::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: linear-gradient(
-      140deg,
-      rgba(255, 255, 255, 0.35),
-      transparent 48%
-    );
-    pointer-events: none;
-  }
-
   /* The flash: a frosted, ridged window on the chrome plate */
   .camera-flash {
     background:

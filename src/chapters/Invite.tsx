@@ -212,8 +212,8 @@ export default function Invite({ onDone }: ChapterProps) {
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
             >
               <span className="flex justify-between gap-2.5 border-b border-ink/30 pb-2 font-ui text-[10px] font-bold tracking-[0.16em] text-smoke uppercase">
-                <span>Court of Birthdays</span>
-                <span>Ruling No. {appeals}</span>
+                <span>Office of the Calendar</span>
+                <span>Notice No. {appeals}</span>
               </span>
               <p className="mt-2.5 pr-[20%] font-body text-[18px] leading-[1.3] text-pretty italic">
                 {ruling}

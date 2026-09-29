@@ -55,7 +55,7 @@ export const content: Content = {
     ],
     denied: "DENIED",
     approved: "APPROVED",
-    sealRing: "The Court of Birthdays · Est. 2004 ·",
+    sealRing: "The Office of the Calendar · Est. 2004 ·",
   },
 
   // The front page of the day she was born. ==Words between double equals== get the yellow marker,
