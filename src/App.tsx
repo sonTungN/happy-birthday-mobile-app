@@ -150,9 +150,10 @@ export default function App() {
   const next = useCallback(() => goTo(index + 1), [goTo, index]);
   const startFilm = useCallback(() => goTo(1, true), [goTo]);
   // Starting over empties the darkroom too, so the roll is shot again from the first frame
+  // From the top, the way it started: the head of the reel counts down again
   const restart = useCallback(() => {
     storage.remove("darkroom");
-    goTo(1);
+    goTo(1, true);
   }, [goTo]);
   const endRoll = useCallback(() => setRollEnded(true), []);
   const leaderDone = useCallback(() => setLeader(null), []);

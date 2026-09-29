@@ -2,8 +2,8 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { audio } from "../lib/audio";
 
-/** How long each number stays on screen (one full sweep of the hand) */
-const STEP_MS = 800;
+/** How long each number stays on screen: one full sweep of the hand (the sweep and the jitter take their duration from here) */
+const STEP_MS = 1000;
 
 /**
  * The countdown leader at the head of an old film reel: rings, crosshair, a sweeping hand and a big number.
@@ -37,7 +37,11 @@ export function Leader({
       transition={{ duration: 0.2 }}
       aria-hidden
     >
-      <div key={`sweep-${step}`} className="leader-sweep absolute inset-0" />
+      <div
+        key={`sweep-${step}`}
+        className="leader-sweep absolute inset-0"
+        style={{ animationDuration: `${STEP_MS}ms` }}
+      />
       <svg
         className="absolute top-1/2 left-1/2 aspect-square w-[94cqw] -translate-1/2 overflow-visible"
         viewBox="0 0 100 100"
@@ -72,7 +76,8 @@ export function Leader({
       <span className="absolute top-1/2 right-0 -mt-1 h-2 w-[12%] bg-[#111]" />
       <span
         key={`number-${step}`}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[46%] animate-[leader-jitter_0.8s_steps(8)_forwards] font-ui text-[62cqw] leading-none font-bold text-[#141414] blur-[0.3px]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[46%] animate-[leader-jitter_1s_steps(8)_forwards] font-ui text-[62cqw] leading-none font-bold text-[#141414] blur-[0.3px]"
+        style={{ animationDuration: `${STEP_MS}ms` }}
       >
         {number}
       </span>

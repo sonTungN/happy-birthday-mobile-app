@@ -36,6 +36,12 @@ export function PhotoViewer({
   /** Which way the last swipe went, so the next print slides in from that side */
   const [dir, setDir] = useState(0);
   const swiped = useRef(false);
+  /** The first moments belong to the tap that opened the viewer, not to it */
+  const openedAt = useRef(Infinity);
+  const settled = () => performance.now() - openedAt.current > 350;
+  useEffect(() => {
+    openedAt.current = performance.now();
+  }, []);
   /** Her print, drawn as a file ahead of time so the share sheet opens the moment she taps */
   const [rendered, setRendered] = useState<{
     of: PhotoEntry;
@@ -84,7 +90,7 @@ export function PhotoViewer({
     <motion.div
       className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-[18px] bg-[rgba(5,5,5,0.78)] p-6 backdrop-blur-[6px]"
       onClick={() => {
-        if (!swiped.current) onClose();
+        if (!swiped.current && settled()) onClose();
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -119,7 +125,7 @@ export function PhotoViewer({
             onDragEnd={onDragEnd}
             onClick={(e) => {
               e.stopPropagation();
-              if (swiped.current) return;
+              if (swiped.current || !settled()) return;
               audio.sfx("paper");
               setFlipped((f) => !f);
             }}
@@ -166,7 +172,7 @@ export function PhotoViewer({
 
       <div className="flex flex-col items-center gap-1 text-center">
         <p className="font-body text-[18px] italic">
-          {flipped ? "Tap to flip it back" : "Tap the photo to flip it over"}
+          {flipped ? "Tap to turn it back" : "Tap to turn it over"}
         </p>
         {photos.length > 1 && (
           <p className="font-ui text-[11px] font-bold tracking-[0.18em] text-white/55 uppercase">

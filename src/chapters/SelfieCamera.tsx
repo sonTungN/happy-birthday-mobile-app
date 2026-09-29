@@ -143,18 +143,18 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
   const caption = shot
     ? line
       ? "Ready to print."
-      : "Add a line for the back of the print, then print it."
+      : "Write a line for the back, then print."
     : fault
       ? ""
       : ready
-        ? "The ninth frame: you, today."
+        ? "You, today."
         : "Opening the camera…";
 
   return (
     <div className="absolute inset-0 flex flex-col bg-[#050505] pt-[calc(var(--safe-top)+62px)] pb-[calc(var(--safe-bottom)+18px)]">
       <div className="flex items-center justify-between px-4">
         <span className="font-ui text-[11px] font-bold tracking-[0.22em] text-white/55 uppercase">
-          The ninth frame
+          The last frame
         </span>
         <button
           type="button"

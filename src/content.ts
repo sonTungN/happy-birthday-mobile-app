@@ -95,8 +95,9 @@ export const content: Content = {
     ],
     correction: {
       title: "Correction",
-      // "\n" starts a new line, so the circled phrase sits at the start of one instead of dropping mid-sentence
-      text: "This edition was delayed by\n(({ageWords} years)). The editor, aged nine months at the time, apologises.",
+      // Only the number is circled: one short word moves to the next line whole, so the text stays a block
+      // (put "\n" before a circled phrase if it ever drops mid-sentence and leaves a gap)
+      text: "This edition was delayed by (({ageWords})) years. The editor, aged nine months at the time, apologises.",
       signature: "The Editor",
     },
   },
@@ -106,14 +107,13 @@ export const content: Content = {
     title: "The year, frame by frame",
     emptyBoard:
       "The past year is still in the camera.\nPress the shutter.",
-    arrangeHint: "Drag the prints anywhere you like",
-    outro: "Tap a picture to read the back",
-    gridHint: "Drag a print by its border to rearrange",
+    arrangeHint: "Drag them where you like",
+    outro: "Tap a print to read its back",
+    gridHint: "Drag a print by its border to reorder",
     cameraName: "Ngỗng & Mít",
     // After the eight, the camera turns round: the ninth frame is a photo of her, taken right then
     selfie: {
       title: "One more. Your turn.",
-      hint: "Tap the shutter to open the camera.",
       caption: "Exhibit I: {ageWords}",
       place: "Right here",
       // The back of her print carries the line she writes when she prints it; this one is the fallback
@@ -211,7 +211,7 @@ export const content: Content = {
 
   // Four tickets, she may scratch only `picks` of them. The rest stay sealed.
   tickets: {
-    title: "Four tickets, two choices",
+    title: "Four tickets. Pick two.",
     intro: "Scratch any two. The other two stay sealed, so choose with care.",
     picks: 2,
     heldStamp: "HELD OVER",

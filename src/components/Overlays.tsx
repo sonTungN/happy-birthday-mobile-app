@@ -154,8 +154,8 @@ export function FullscreenAsk({
         </h3>
         <p className="font-body text-[18px] leading-[1.4] text-[#3a3a3a] italic">
           {homescreen
-            ? "Add it to your Home Screen and it opens like an app, with no browser bars in the way."
-            : "Watch it full screen, with nothing else in the way."}
+            ? "From your Home Screen it opens like an app, with no browser bars."
+            : "Full screen, with nothing else in the way."}
         </p>
         <button
           type="button"

@@ -70,12 +70,12 @@ const HEAD = {
 
 const MIC_ERRORS: Record<MicErrorKind, string> = {
   denied:
-    "The mic permission was turned down, so let’s blow with a finger instead.",
+    "The mic was turned down. Blow with a finger instead.",
   insecure:
-    "The mic only works on a secure (https) link. Let’s blow with a finger instead.",
+    "The mic needs a secure (https) link. Blow with a finger instead.",
   unsupported:
-    "This browser can’t use the mic. Let’s blow with a finger instead.",
-  failed: "Couldn’t open the mic. Let’s blow with a finger instead.",
+    "This browser can’t use the mic. Blow with a finger instead.",
+  failed: "The mic won’t open. Blow with a finger instead.",
 };
 
 function numberParam(name: string): number | undefined {
@@ -441,10 +441,10 @@ export default function Candles() {
     ? fill(content.cake.trickLine)
     : step === "light"
       ? matchLit
-        ? "Now touch each wick with the flame"
-        : "Drag the match along the side of the box to strike it"
+        ? "Touch each wick with the flame"
+        : "Strike the match along the side of the box"
       : step === "blow"
-        ? "The mic is on the bottom edge of your phone"
+        ? "Blow at the bottom edge of your phone"
         : step === "manual"
           ? (micError ?? "Swipe across the flames to blow them out")
           : null;

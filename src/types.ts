@@ -127,8 +127,6 @@ export interface Content {
     selfie: {
       /** Title once the roll is done and the camera has turned round */
       title: string;
-      /** Under the camera, in place of the usual hint */
-      hint: string;
       /** On the print's border, and on its back */
       caption: string;
       place?: string;

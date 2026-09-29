@@ -234,6 +234,8 @@ export default function Darkroom() {
   const [cells, setCells] = useState<number[]>([]);
   const board = useElementSize(boardRef);
   const [viewer, setViewer] = useState<number | null>(null);
+  /** Counts the openings: each gets a fresh viewer, so a print never comes up already turned over */
+  const [viewerOpens, setViewerOpens] = useState(0);
   const [developing, setDeveloping] = useState<Developing | null>(null);
   const [flashes, setFlashes] = useState(0);
   const [rubbed, setRubbed] = useState(false);
@@ -525,19 +527,10 @@ export default function Darkroom() {
 
   const openViewer = (index: number) => {
     audio.sfx("paper");
+    // Closing and reopening within the exit animation would otherwise keep the old viewer (and its turned-over state)
+    setViewerOpens((n) => n + 1);
     setViewer(index);
   };
-
-  // Under the camera. No count and no "next one": she finds out how many frames there are, and that the
-  // last one is hers, by taking them; the fingertip on the first prints shows the rubbing
-  const hint =
-    phase === "selfie"
-      ? fill(SELFIE.hint)
-      : phase === "developed" || phase === "pinning"
-        ? developing && developing.index >= total && blank
-          ? "Not yet."
-          : "Lovely."
-        : null;
 
   const current: PhotoEntry | undefined = developing
     ? all[developing.index]
@@ -664,7 +657,6 @@ export default function Darkroom() {
               second={<CameraFront ready={phase === "selfie"} lit={flashLit} />}
             />
           </motion.button>
-          {!done && hint && <p className="hint">{hint}</p>}
           {phase === "selfie" && (
             // A way past it without a picture
             <button
@@ -760,7 +752,7 @@ export default function Darkroom() {
       <AnimatePresence>
         {viewer !== null && (
           <PhotoViewer
-            key="viewer"
+            key={`viewer-${viewerOpens}`}
             photos={cells.map((i) => all[i])}
             index={Math.max(0, cells.indexOf(viewer))}
             onIndex={(p) => setViewer(cells[p])}
@@ -838,7 +830,11 @@ interface BoardPhotoProps {
 }
 
 /** Is the pointer on the picture itself (not the white border or the caption)? The picture is the top square of the print. */
-function onPicture(e: ReactPointerEvent<HTMLElement>): boolean {
+function onPicture(e: {
+  currentTarget: HTMLElement;
+  clientX: number;
+  clientY: number;
+}): boolean {
   const r = e.currentTarget.getBoundingClientRect();
   const px = (e.clientX - r.left) / r.width;
   const py = (e.clientY - r.top) / r.width;
@@ -908,14 +904,16 @@ function BoardPhoto({
         down.current = { x: e.clientX, y: e.clientY, t: e.timeStamp };
         onLift();
       }}
-      onPointerUp={(e) => {
+      // The viewer opens on the click, not on pointer-up: a tap's click comes after its pointer-up, and with
+      // the viewer already up by then, the click landed on it (turning the print over, or closing it again)
+      onClick={(e) => {
         const start = down.current;
         down.current = null;
         if (mode !== "grid" || !start) return;
-        // A short tap on the picture (not a drag, not the border) turns it over
+        // A short tap on the picture (not a drag, not the border) opens it
         const tap =
-          Math.hypot(e.clientX - start.x, e.clientY - start.y) < 8 &&
-          e.timeStamp - start.t < 450;
+          Math.hypot(e.clientX - start.x, e.clientY - start.y) < 12 &&
+          e.timeStamp - start.t < 500;
         if (tap && onPicture(e)) onOpen();
       }}
     >
@@ -998,9 +996,8 @@ function CameraBack({
 function CameraFront({ ready, lit }: { ready: boolean; lit: boolean }) {
   return (
     <span className="absolute inset-0">
-      <span
-        className={`camera-shutter absolute -top-[9px] left-[12%] h-4 w-[17%] ${ready ? "animate-[camera-pulse_1.6s_ease-in-out_infinite]" : ""}`}
-      />
+      {/* The same shutter button, seen from the front; here it's the lens she taps, so it doesn't pulse */}
+      <span className="camera-shutter absolute -top-[9px] left-[12%] h-4 w-[17%]" />
       <span className="camera-body absolute inset-0 overflow-hidden rounded-[14px]">
         <span className="absolute top-[7px] right-[18%] left-[18%] z-1 h-[7px] rounded-xs bg-[#0b0b0b] shadow-[inset_0_2px_3px_rgba(0,0,0,0.8)]" />
         {/* The flash window on the chrome plate: it fires when the print comes out */}
@@ -1010,8 +1007,11 @@ function CameraFront({ ready, lit }: { ready: boolean; lit: boolean }) {
         <span className="absolute top-[13%] left-[8%] z-1 font-ui text-[8px] font-bold tracking-[0.18em] text-[#5f5d58] uppercase">
           Instant · Auto
         </span>
-        {/* The lens */}
+        {/* The lens; when it's her turn a ring pulses out of it: look in here (the tap zooms into it) */}
         <span className="camera-lens absolute top-[54%] left-1/2 z-1 aspect-square w-[40%] -translate-1/2 rounded-[50%]" />
+        {ready && (
+          <span className="pointer-events-none absolute top-[54%] left-1/2 z-1 aspect-square w-[40%] -translate-1/2 animate-[lens-ping_1.6s_ease-out_infinite] rounded-[50%] border border-[rgba(248,246,240,0.7)]" />
+        )}
         {/* The selfie mirror beside the lens */}
         <span className="camera-mirror absolute top-[44%] right-[8%] z-1 aspect-square w-[24%] rounded-[50%]" />
         {/* The lamp left of the lens: lit when it's her turn */}

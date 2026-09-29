@@ -89,6 +89,7 @@
       rgba(20, 20, 20, 0.2) 0deg var(--sweep),
       rgba(255, 255, 255, 0.05) var(--sweep) 360deg
     );
+    /* The duration is set inline from STEP_MS in Leader.tsx; this is only the fallback */
     animation: leader-sweep 1s linear forwards;
   }
 
@@ -1019,6 +1020,18 @@
 }
 
 /* Darkroom */
+/* A ring pulsing out of the lens: look in here */
+@keyframes lens-ping {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
 @keyframes camera-pulse {
   0%,
   100% {
