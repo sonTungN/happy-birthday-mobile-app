@@ -89,7 +89,7 @@
       rgba(20, 20, 20, 0.2) 0deg var(--sweep),
       rgba(255, 255, 255, 0.05) var(--sweep) 360deg
     );
-    animation: leader-sweep 0.8s linear forwards;
+    animation: leader-sweep 1s linear forwards;
   }
 
   /* ---- EnvelopeArt: paper, the lined letter, black wax ---- */

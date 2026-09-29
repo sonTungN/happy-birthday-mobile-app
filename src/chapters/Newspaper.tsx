@@ -160,18 +160,18 @@ const HEADLINE = {
 
 /** The line under each headline (the "dek") */
 const DEK = {
-  lead: "mt-3 text-[19px] leading-[1.42] font-normal text-pretty text-news-ink/86",
+  lead: "mt-3 text-[19px] leading-[1.42] font-normal text-justify hyphens-auto text-pretty text-news-ink/86",
   column:
-    "mt-2.5 text-[15px] leading-[1.4] font-normal text-pretty text-news-ink/86",
-  wide: "mt-2.5 text-[17px] leading-[1.42] font-normal text-pretty text-news-ink/86",
+    "mt-2.5 text-[15px] leading-[1.4] font-normal text-justify hyphens-auto text-pretty text-news-ink/86",
+  wide: "mt-2.5 text-[17px] leading-[1.42] font-normal text-justify hyphens-auto text-pretty text-news-ink/86",
 };
 
 /** The paragraphs of a story, after the dek (after the photo, for the lead) */
 const BODY = {
-  lead: "text-[16.5px] leading-[1.45] font-normal text-pretty text-news-ink/84",
+  lead: "text-[16.5px] leading-[1.45] font-normal text-justify hyphens-auto text-pretty text-news-ink/84",
   column:
-    "mt-2 text-[14px] leading-[1.4] font-normal text-pretty text-news-ink/84",
-  wide: "mt-2 text-[15.5px] leading-[1.42] font-normal text-pretty text-news-ink/84",
+    "mt-2 text-[14px] leading-[1.4] font-normal text-justify hyphens-auto text-pretty text-news-ink/84",
+  wide: "mt-2 text-[15.5px] leading-[1.42] font-normal text-justify hyphens-auto text-pretty text-news-ink/84",
 };
 
 /**
@@ -423,7 +423,7 @@ function Correction({ enabled }: { enabled: boolean }) {
         {fill(correction.title)}
       </h3>
       <Marked
-        className="mt-2 text-[17px] leading-[1.45] text-pretty"
+        className="mt-2 text-[17px] leading-[1.45] text-justify hyphens-auto text-pretty"
         text={fill(correction.text)}
         play={seen}
         delay={0.3}
