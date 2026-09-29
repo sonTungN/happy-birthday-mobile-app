@@ -31,23 +31,14 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       injectRegister: null,
       includeAssets: ['favicon.ico', 'favicon.svg', 'apple-touch-icon-180x180.png', 'og-image.jpg'],
-      manifest: {
-        name: 'Reel Twenty-Two',
-        short_name: 'Reel 22',
-        description: 'A roll of film waiting to be developed.',
-        lang: 'en',
-        theme_color: '#0b0b0b',
-        background_color: '#0b0b0b',
-        display: 'standalone',
-        orientation: 'portrait',
-        start_url: '/',
-        icons: [
-          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-        ],
-      },
+      /*
+       * No web app manifest on purpose. On iOS 26 a page that links one (or asks for a translucent status bar)
+       * is laid out by a buggy path when opened from the Home Screen: the view is one status bar too short and a
+       * bare strip is left at the bottom of the screen (pi-web issue #598, measured on device). Without it, an
+       * iPhone still opens the roll full screen from the Home Screen (index.html: apple-mobile-web-app-capable,
+       * the title and icon metas), and the service worker below still makes it work offline.
+       */
+      manifest: false,
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,webp,woff2,wav}'],
         // Font subsets the site never uses

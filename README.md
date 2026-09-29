@@ -80,6 +80,8 @@ The [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemN
 2. On vercel.com, choose **Add New → Project** and import the repo. The defaults work: Vite, `npm run build`, output `dist`.
 3. Send her the link. On iPhone: Share → **Add to Home Screen** makes it open full-screen like an app.
 
+There is no web app manifest on purpose: on iOS 26 a page that links one (or asks for a translucent status bar) opens from the Home Screen one status bar too short, with a bare strip at the bottom. The iPhone metas in `index.html` are enough for it to open full screen, and the service worker keeps it working offline.
+
 The site asks search engines not to index it (`noindex` meta tag plus an `X-Robots-Tag` header). The link preview image uses the Vercel production URL automatically; set `SITE_URL` if you use a custom domain.
 
 ## Credits

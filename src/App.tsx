@@ -17,13 +17,12 @@ import { bindConfetti } from './lib/confetti'
 import { enterFullscreen, fullscreenWay, useFullscreen } from './lib/fullscreen'
 import { params, useMuted } from './lib/hooks'
 import { storage } from './lib/storage'
-import { keepStageFull } from './lib/viewport'
 
 const CHAPTERS = ['lock', 'invite', 'news', 'darkroom', 'candles', 'finale'] as const
 type ChapterId = (typeof CHAPTERS)[number]
 
 /** The classic leader countdown that plays once, when the film starts */
-const INTRO_COUNTDOWN = [7, 6, 5, 4, 3, 2]
+const INTRO_COUNTDOWN = [10, 9, 8, 7, 6]
 
 /** Old or inner names that live inside another chapter (for ?chapter=… while testing) */
 const ALIASES: Record<string, ChapterId> = { gazette: 'news', cake: 'candles', letter: 'candles' }
@@ -57,7 +56,6 @@ export default function App() {
   const armedAction = useRef<(() => void) | null>(null)
   const pending = useRef<number | null>(null)
   const confettiRef = useRef<HTMLCanvasElement>(null)
-  const stageRef = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
   const chapter = CHAPTERS[index]
 
@@ -73,9 +71,6 @@ export default function App() {
     if (fullscreenWay() === 'api') void enterFullscreen()
     else setInstall(true)
   }
-
-  // Home Screen web apps on iOS 26 may report a viewport shorter than the screen (see lib/viewport.ts)
-  useEffect(() => (stageRef.current ? keepStageFull(stageRef.current) : undefined), [])
 
   useEffect(() => {
     bindConfetti(confettiRef.current)
@@ -153,7 +148,7 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       {/* The screen. On a laptop it becomes a phone-sized frame (effects.css: .app-stage) */}
-      <main className="app-stage" ref={stageRef}>
+      <main className="app-stage">
         <AdvanceContext.Provider value={advance}>
           <motion.section key={chapter} className="absolute inset-0 overflow-hidden bg-[#0b0b0b]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}>
             <ErrorBoundary onSkip={next}>

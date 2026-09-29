@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { audio } from '../lib/audio'
 import { hapticRef } from '../lib/haptics'
-import { CameraError, dataUrlToBlob, hasTorch, keepPrint, openCamera, setTorch as setLamp, snapshot, stopStream, type CameraFault, type Facing } from '../lib/selfie'
+import { CameraError, dataUrlToBlob, keepPrint, openCamera, snapshot, stopStream, type CameraFault, type Facing } from '../lib/selfie'
 
 interface SelfieCameraProps {
   /** She printed it: the picture (a data URL) and her line for the back of the print */
@@ -12,7 +12,6 @@ interface SelfieCameraProps {
   onClose: () => void
 }
 
-const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 /** Room on the back of a print */
 const MESSAGE_MAX = 90
 const ZOOMS = [1, 2]
@@ -20,22 +19,17 @@ const ZOOMS = [1, 2]
 const ROUND = 'grid place-items-center rounded-[50%] border-0 p-0 text-white'
 
 /**
- * The phone's camera, the way a camera app shows it: a square viewfinder, a shutter, flash, zoom, and the other
+ * The phone's camera, the way a camera app shows it: a square viewfinder, a shutter, zoom, and the other
  * camera for when someone else takes the picture. Once it's taken she writes a line for the back of the print
  * and prints it, or keeps the photo as it is.
  */
 export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
-  const streamRef = useRef<MediaStream | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [facing, setFacing] = useState<Facing>('user')
   const [zoom, setZoom] = useState(1)
-  const [flash, setFlash] = useState(false)
   const [attempt, setAttempt] = useState(0)
   const [fault, setFault] = useState<CameraFault | null>(null)
-  /** The back camera has a lamp the browser can switch on (Android does, iPhones don't let a page) */
-  const [torch, setTorch] = useState(false)
-  const [flashing, setFlashing] = useState(false)
   const [busy, setBusy] = useState(false)
   const [shot, setShot] = useState<string | null>(null)
   const [message, setMessage] = useState('')
@@ -54,13 +48,11 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
           return
         }
         stream = opened
-        streamRef.current = opened
         const video = videoRef.current
         if (video) {
           video.srcObject = opened
           await video.play().catch(() => {})
         }
-        setTorch(hasTorch(opened))
         setFault(null)
       })
       .catch((err: unknown) => {
@@ -69,7 +61,6 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
     return () => {
       live = false
       stopStream(stream)
-      streamRef.current = null
     }
   }, [facing, attempt])
 
@@ -77,32 +68,19 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
     if (editing) inputRef.current?.focus()
   }, [editing])
 
-  const capture = async () => {
+  const capture = () => {
     const video = videoRef.current
     if (busy || !video || video.videoWidth === 0) return
     setBusy(true)
     try {
-      if (flash && mirror) {
-        // The screen is the flash for the front camera: white for a moment before the picture
-        setFlashing(true)
-        await wait(420)
-      } else if (flash && torch) {
-        await setLamp(streamRef.current, true)
-        await wait(150)
-      }
       audio.sfx('shutter')
       setShot(snapshot(video, { mirror, zoom }))
     } catch {
       /* no picture this time: she can try again */
     } finally {
-      if (flash && torch) void setLamp(streamRef.current, false)
-      setFlashing(false)
       setBusy(false)
     }
   }
-
-  /** The flash button does something on this camera: the screen for the front one, a lamp for the back one */
-  const canFlash = mirror || torch
 
   const switchCamera = () => {
     audio.sfx('tap')
@@ -145,25 +123,9 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
         {shot && <img src={shot} alt="" className="absolute inset-0 h-full w-full object-cover" />}
 
         {!shot && !fault && (
-          <>
-            {canFlash && (
-              <button
-                type="button"
-                className={`${ROUND} absolute top-4 left-4 h-11 w-11 ${flash ? 'bg-white text-ink' : 'bg-white/20'}`}
-                onClick={() => {
-                  audio.sfx('tap')
-                  setFlash((f) => !f)
-                }}
-                aria-label={flash ? 'Flash on' : 'Flash off'}
-                aria-pressed={flash}
-              >
-                <BoltIcon />
-              </button>
-            )}
-            <button type="button" className={`${ROUND} absolute top-4 right-4 h-11 w-11 bg-white/20 font-ui text-[13px] font-bold`} onClick={cycleZoom} aria-label={`Zoom ${zoom}×`}>
-              {zoom}×
-            </button>
-          </>
+          <button type="button" className={`${ROUND} absolute top-4 right-4 h-11 w-11 bg-white/20 font-ui text-[13px] font-bold`} onClick={cycleZoom} aria-label={`Zoom ${zoom}×`}>
+            {zoom}×
+          </button>
         )}
 
         {shot &&
@@ -241,7 +203,7 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
         ) : (
           <>
             <span className="h-12 w-12" aria-hidden />
-            <button type="button" className={`${ROUND} h-[78px] w-[78px] border-[4px] border-white/95 bg-transparent`} ref={hapticRef} disabled={!!fault} onClick={() => void capture()} aria-label="Take the picture">
+            <button type="button" className={`${ROUND} h-[78px] w-[78px] border-[4px] border-white/95 bg-transparent`} ref={hapticRef} disabled={!!fault} onClick={capture} aria-label="Take the picture">
               <span className="block h-[60px] w-[60px] rounded-[50%] bg-white" />
             </button>
             <button type="button" className={`${ROUND} h-12 w-12 bg-white/12`} ref={hapticRef} onClick={switchCamera} aria-label="Switch camera">
@@ -250,8 +212,6 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
           </>
         )}
       </div>
-
-      {flashing && <div className="absolute inset-0 z-10 bg-white" aria-hidden />}
     </div>
   )
 }
@@ -262,14 +222,6 @@ function CloseIcon() {
   return (
     <svg {...ICON}>
       <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  )
-}
-
-function BoltIcon() {
-  return (
-    <svg {...ICON} fill="currentColor" stroke="none">
-      <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" />
     </svg>
   )
 }
