@@ -1,35 +1,59 @@
-import { motion, type MotionStyle } from 'motion/react'
-import type { CSSProperties, ReactNode } from 'react'
-import { stampParts } from '../lib/text'
+import { motion, type MotionStyle } from "motion/react";
+import type { CSSProperties, ReactNode } from "react";
+import { stampParts } from "../lib/text";
 
 interface PolaroidProps {
-  src: string
-  alt?: string
-  caption?: string
+  src: string;
+  alt?: string;
+  caption?: string;
   /** 'YYYY-MM-DD' → date imprinted in the corner of the photo */
-  date?: string
+  date?: string;
   /** CSS object-position used to crop the photo into a square */
-  focus?: string
-  className?: string
-  style?: CSSProperties
+  focus?: string;
+  className?: string;
+  style?: CSSProperties;
   /** Extra styles for the photo area, e.g. the developing filter (it stacks on top of the black-and-white look) */
-  photoStyle?: MotionStyle
+  photoStyle?: MotionStyle;
   /** Layers inside the photo area (e.g. the developing overlay) */
-  children?: ReactNode
+  children?: ReactNode;
   /** Things stuck on top of the card (tape, stickers) */
-  extras?: ReactNode
+  extras?: ReactNode;
 }
 
 /**
  * An instant photo. Its width must be set by the parent: every size inside scales with it (cqw = % of the card's width).
  * The paper and the vignette are drawn in effects.css (.polaroid-card, .polaroid-photo).
  */
-export function Polaroid({ src, alt = '', caption, date, focus, className = '', style, photoStyle, children, extras }: PolaroidProps) {
-  const stamp = date ? stampParts(date) : null
+export function Polaroid({
+  src,
+  alt = "",
+  caption,
+  date,
+  focus,
+  className = "",
+  style,
+  photoStyle,
+  children,
+  extras,
+}: PolaroidProps) {
+  const stamp = date ? stampParts(date) : null;
   return (
-    <div className={`polaroid-card @container relative rounded-xs px-[5.5%] pt-[5.5%] pb-[21%] ${className}`} style={style}>
-      <motion.div className="polaroid-photo relative aspect-square overflow-hidden bg-[#1a1a1a]" style={photoStyle}>
-        <img src={src} alt={alt} draggable={false} decoding="async" className="h-full w-full object-cover [filter:var(--photo-filter)]" style={{ objectPosition: focus }} />
+    <div
+      className={`polaroid-card @container relative rounded-xs px-[5.5%] pt-[5.5%] pb-[21%] ${className}`}
+      style={style}
+    >
+      <motion.div
+        className="polaroid-photo relative aspect-square overflow-hidden bg-[#1a1a1a]"
+        style={photoStyle}
+      >
+        <img
+          src={src}
+          alt={alt}
+          draggable={false}
+          decoding="async"
+          className="h-full w-full object-cover [filter:var(--photo-filter)]"
+          style={{ objectPosition: focus }}
+        />
         {stamp && (
           // The date the camera printed in the corner, in pale silver
           <span
@@ -53,18 +77,26 @@ export function Polaroid({ src, alt = '', caption, date, focus, className = '', 
       )}
       {extras}
     </div>
-  )
+  );
 }
 
-type TapeColor = 'paper' | 'smoke'
+type TapeColor = "paper" | "smoke";
 
 /** A strip of old masking tape across the top of a print. Tilt it with `style={{ rotate: '3deg' }}`. */
-export function Tape({ color = 'paper', className = '', style }: { color?: TapeColor; className?: string; style?: CSSProperties }) {
+export function Tape({
+  color = "paper",
+  className = "",
+  style,
+}: {
+  color?: TapeColor;
+  className?: string;
+  style?: CSSProperties;
+}) {
   return (
     <span
       aria-hidden
       className={`tape tape-${color} pointer-events-none absolute -top-[5%] left-[29%] z-3 h-[11%] w-[42%] -rotate-4 ${className}`}
       style={style}
     />
-  )
+  );
 }

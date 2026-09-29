@@ -1,12 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<defs><radialGradient id="bg" cx=".5" cy=".5" r=".72"><stop offset="0" stop-color="#d6d3cc"/><stop offset=".45" stop-color="#a9a6a0"/><stop offset=".8" stop-color="#57564f"/><stop offset="1" stop-color="#1c1c1c"/></radialGradient></defs>
-<rect width="512" height="512" fill="url(#bg)"/>
-<path d="M256 256 L256 -60 A316 316 0 0 1 529 98 Z" fill="#000" fill-opacity=".14"/>
-<circle cx="256" cy="256" r="214" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="3"/>
-<circle cx="256" cy="256" r="198" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="14"/>
-<circle cx="256" cy="256" r="182" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="3"/>
-<line x1="256" y1="0" x2="256" y2="512" stroke="#161616" stroke-width="5"/>
-<line x1="0" y1="256" x2="512" y2="256" stroke="#161616" stroke-width="5"/>
-<rect x="0" y="248" width="60" height="16" fill="#111"/><rect x="452" y="248" width="60" height="16" fill="#111"/>
-<g transform="translate(256 256) scale(1.35) translate(-256 -252)"><path d="M256 305 C220 280 196 258 196 232 C196 214 210 200 228 200 C241 200 251 207 256 218 C261 207 271 200 284 200 C302 200 316 214 316 232 C316 258 292 280 256 305 Z" fill="#141414"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+<rect width="120" height="120" fill="#0b0b0b"/>
+<g fill="none" stroke="#e9e4d8">
+<circle cx="60" cy="60" r="57" stroke-width="2"/>
+<circle cx="60" cy="60" r="51.5" stroke-width="5" stroke-dasharray="4.2 9.28" stroke-opacity=".55" transform="rotate(-90 60 60)"/>
+<circle cx="60" cy="60" r="46" stroke-width="1.2"/>
+</g>
+<path d="M60 86 C42 73 32 62 32 49 C32 40 39 33 48 33 C54 33 58 36 60 41 C62 36 66 33 72 33 C81 33 88 40 88 49 C88 62 78 73 60 86 Z" fill="#e9e4d8"/>
 </svg>

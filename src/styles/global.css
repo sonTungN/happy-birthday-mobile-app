@@ -9,10 +9,10 @@
  *   live in effects.css.
  */
 @layer theme, base, components, utilities;
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/utilities.css' layer(utilities);
-@import './fonts.css';
-@import './effects.css';
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./fonts.css";
+@import "./effects.css";
 
 @theme static {
   /* Black-and-white film: charcoal, silver and aged paper */
@@ -34,14 +34,14 @@
   --color-pen: #b3342b;
 
   --font-*: initial;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-ui: 'Josefin Sans', 'Helvetica Neue', system-ui, sans-serif;
-  --font-body: 'EB Garamond', Georgia, serif;
-  --font-script: 'Pinyon Script', 'EB Garamond', cursive;
-  --font-seg: 'DSEG7', ui-monospace, monospace;
-  --font-news: 'Newsreader', Georgia, serif;
-  --font-masthead: 'Chomsky', 'Old English Text MT', 'Newsreader', serif;
-  --font-hand: 'Caveat', 'Bradley Hand', cursive;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-ui: "Josefin Sans", "Helvetica Neue", system-ui, sans-serif;
+  --font-body: "EB Garamond", Georgia, serif;
+  --font-script: "Pinyon Script", "EB Garamond", cursive;
+  --font-seg: "DSEG7", ui-monospace, monospace;
+  --font-news: "Newsreader", Georgia, serif;
+  --font-masthead: "Chomsky", "Old English Text MT", "Newsreader", serif;
+  --font-hand: "Caveat", "Bradley Hand", cursive;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   /* transition-* classes ease like plain CSS transitions */
@@ -85,7 +85,13 @@
   }
 
   body {
-    background: radial-gradient(1100px 800px at 50% 30%, #3a3937 0%, #1b1b1b 50%, #0b0b0b 100%) fixed;
+    background: radial-gradient(
+        1100px 800px at 50% 30%,
+        #3a3937 0%,
+        #1b1b1b 50%,
+        #0b0b0b 100%
+      )
+      fixed;
     color: var(--color-white);
     font-family: var(--font-ui);
     -webkit-font-smoothing: antialiased;
@@ -158,7 +164,12 @@
   /* The projected-film background: lighter in the middle, burnt-out edges */
   .film-bg {
     background-color: #242424;
-    background-image: radial-gradient(ellipse 90% 70% at 50% 42%, #5f5e5b 0%, #353432 48%, #141414 100%);
+    background-image: radial-gradient(
+      ellipse 90% 70% at 50% 42%,
+      #5f5e5b 0%,
+      #353432 48%,
+      #141414 100%
+    );
   }
 
   /* Old cinema buttons: squared off, spaced capitals, a printed drop shadow */

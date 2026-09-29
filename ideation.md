@@ -17,15 +17,15 @@
 
 ## 1. Web hay app Xcode?
 
-| Tiêu chí | Xcode + Apple ID free | Xcode + Apple Developer ($99/năm) | **Web/PWA trên Vercel** |
-|---|---|---|---|
-| Dùng được bao lâu | **7 ngày**, sau đó phải cắm máy vào Mac build lại | Tối đa 1 năm (ad-hoc), TestFlight thì 90 ngày/build | **Mãi mãi**, miễn link còn |
-| Cài lên máy người ấy | Phải cầm iPhone người ấy cắm vào Mac, bật Developer Mode (máy khởi động lại), trust certificate → **lộ bất ngờ** | Gửi link TestFlight, người ấy cài app TestFlight trước | Gửi link/QR. "Thêm vào MH chính" để có icon, mở toàn màn hình |
-| Chi phí | 0đ | ~2,5 triệu/năm | 0đ (subdomain `.vercel.app`); domain riêng tuỳ chọn |
-| Thổi nến bằng mic | Có (AVAudioEngine) | Có | Có (cần HTTPS + xin quyền mic) |
-| Rung (haptic) | Core Haptics, rung tuỳ ý | Như bên trái | Hạn chế: chỉ rung được khi người dùng chạm (xem mục 6) |
-| Sửa nội dung sau khi gửi | Build + cài lại, cần cầm máy | Upload build mới | `git push`, khoảng 30 giây là live |
-| Giới hạn khác | Tối đa 3 app/máy, 3 máy/tài khoản | Không đáng kể | Không đáng kể |
+| Tiêu chí                 | Xcode + Apple ID free                                                                                            | Xcode + Apple Developer ($99/năm)                      | **Web/PWA trên Vercel**                                       |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------- |
+| Dùng được bao lâu        | **7 ngày**, sau đó phải cắm máy vào Mac build lại                                                                | Tối đa 1 năm (ad-hoc), TestFlight thì 90 ngày/build    | **Mãi mãi**, miễn link còn                                    |
+| Cài lên máy người ấy     | Phải cầm iPhone người ấy cắm vào Mac, bật Developer Mode (máy khởi động lại), trust certificate → **lộ bất ngờ** | Gửi link TestFlight, người ấy cài app TestFlight trước | Gửi link/QR. "Thêm vào MH chính" để có icon, mở toàn màn hình |
+| Chi phí                  | 0đ                                                                                                               | ~2,5 triệu/năm                                         | 0đ (subdomain `.vercel.app`); domain riêng tuỳ chọn           |
+| Thổi nến bằng mic        | Có (AVAudioEngine)                                                                                               | Có                                                     | Có (cần HTTPS + xin quyền mic)                                |
+| Rung (haptic)            | Core Haptics, rung tuỳ ý                                                                                         | Như bên trái                                           | Hạn chế: chỉ rung được khi người dùng chạm (xem mục 6)        |
+| Sửa nội dung sau khi gửi | Build + cài lại, cần cầm máy                                                                                     | Upload build mới                                       | `git push`, khoảng 30 giây là live                            |
+| Giới hạn khác            | Tối đa 3 app/máy, 3 máy/tài khoản                                                                                | Không đáng kể                                          | Không đáng kể                                                 |
 
 **Kết luận: web/PWA.** Native chỉ hơn ở rung xịn hơn và animation mượt hơn một chút. Đổi lại phải chịu hạn 7 ngày và mất yếu tố bất ngờ, nên không đáng.
 
@@ -41,7 +41,7 @@ Chỉ nên chọn native khi đằng nào cũng muốn học SwiftUI **và** ch�
 
 - Toàn bộ trải nghiệm là một chiếc **máy ảnh dùng một lần**.
 - Góc trên màn hình có **bộ đếm phim** kiểu máy film: `07`, `06`, … đến `00`. Mỗi chương là một kiểu ảnh.
-- Kết thúc ở `00`: *"Hết cuộn này rồi. Còn nhiều cuộn nữa, mình chụp tiếp nhé."*
+- Kết thúc ở `00`: _"Hết cuộn này rồi. Còn nhiều cuộn nữa, mình chụp tiếp nhé."_
 
 ### Moodboard (lấy từ ảnh tham khảo)
 
@@ -53,12 +53,12 @@ Chỉ nên chọn native khi đằng nào cũng muốn học SwiftUI **và** ch�
 
 ### Font (đã kiểm tra trên Google Fonts: có hỗ trợ tiếng Việt)
 
-| Vai trò | Gợi ý | Ghi chú |
-|---|---|---|
+| Vai trò                | Gợi ý                                            | Ghi chú                                                                                                                       |
+| ---------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
 | Chữ tay (caption, thư) | **Pangolin**, Patrick Hand, Mali, Dancing Script | ⚠️ **Caveat, Kalam, Gochi Hand, Shadows Into Light không có tiếng Việt** nên sẽ vỡ dấu. Caveat rất hay được dùng nên dễ dính. |
-| UI / chữ thường | **Be Vietnam Pro**, Nunito | |
-| Tiêu đề điệu | Fraunces, Playfair Display, Pacifico | |
-| Date stamp | DSEG7 (font 7-segment, free, tự host) | Chỉ có số nên không cần dấu |
+| UI / chữ thường        | **Be Vietnam Pro**, Nunito                       |                                                                                                                               |
+| Tiêu đề điệu           | Fraunces, Playfair Display, Pacifico             |                                                                                                                               |
+| Date stamp             | DSEG7 (font 7-segment, free, tự host)            | Chỉ có số nên không cần dấu                                                                                                   |
 
 ### Âm thanh
 
@@ -79,17 +79,17 @@ Chỉ nên chọn native khi đằng nào cũng muốn học SwiftUI **và** ch�
 
 - Màn hình giống lock screen iPhone: hình nền là ảnh hai người làm mờ, có bàn phím số.
 - **Mật mã:** ngày kỷ niệm (DDMM).
-  - Nhập sai thì ô nhập rung lắc, kèm gợi ý dễ thương (*"gợi ý: ngày ai đó tỏ tình 👀"*).
+  - Nhập sai thì ô nhập rung lắc, kèm gợi ý dễ thương (_"gợi ý: ngày ai đó tỏ tình 👀"_).
 - **Nếu chưa tới sinh nhật:** hiện đồng hồ đếm ngược đến 00:00, chưa cho mở.
 - **Lý do kỹ thuật:** cú chạm này là tương tác đầu tiên của người dùng. iOS bắt buộc phải có cú chạm như vậy mới cho phát âm thanh.
 
 ### Chương 1: Lời mời (frame 06)
 
-- Lấy thẳng từ ảnh tham khảo: 3 polaroid + câu hỏi *"Muốn xem bất ngờ không?"*
+- Lấy thẳng từ ảnh tham khảo: 3 polaroid + câu hỏi _"Muốn xem bất ngờ không?"_
 - Hai nút `YES, PLEASE!` / `NO, THANKS!`:
-  - Chạm vào **NO** thì nút nhảy sang chỗ khác và đổi chữ: *"Chắc chưa?"* → *"Nghĩ lại đi"* → *"Bấm nhầm đúng không"*.
+  - Chạm vào **NO** thì nút nhảy sang chỗ khác và đổi chữ: _"Chắc chưa?"_ → _"Nghĩ lại đi"_ → _"Bấm nhầm đúng không"_.
   - Mỗi lần bấm NO, nút YES to thêm một chút.
-  - Lưu ý: điện thoại không có hover, nên để nút NO chạy khi *chạm*, không phải khi ngón tay *lại gần*.
+  - Lưu ý: điện thoại không có hover, nên để nút NO chạy khi _chạm_, không phải khi ngón tay _lại gần_.
 - Bấm YES thì nhạc nền bắt đầu, kèm một chút confetti.
 
 ### Chương 2: Rửa ảnh (frame 05) ⭐ 5–7 ảnh film
@@ -117,8 +117,8 @@ Chỉ nên chọn native khi đằng nào cũng muốn học SwiftUI **và** ch�
 
 1. Bánh kem 2D, số nến bằng số tuổi (hoặc dùng nến số). Nến chưa thắp.
 2. Ở góc có hộp diêm. **Vuốt que diêm lên hộp** để quẹt ra lửa, rồi kéo lửa chạm vào từng bấc nến để thắp.
-3. Màn hình tối lại: *"Nhắm mắt, ước một điều đi"*. Giữ ngón tay trên màn hình 3 giây, có vòng tròn chạy quanh ngón tay.
-4. **Màn xin quyền mic tự làm**, hiện trước popup của iOS: *"Cho phép micro để thổi nến nha, không ghi âm gì hết"*. Có mũi tên chỉ xuống **cạnh dưới iPhone**, vì mic nằm ở đó.
+3. Màn hình tối lại: _"Nhắm mắt, ước một điều đi"_. Giữ ngón tay trên màn hình 3 giây, có vòng tròn chạy quanh ngón tay.
+4. **Màn xin quyền mic tự làm**, hiện trước popup của iOS: _"Cho phép micro để thổi nến nha, không ghi âm gì hết"_. Có mũi tên chỉ xuống **cạnh dưới iPhone**, vì mic nằm ở đó.
 5. **Thổi:** lửa **nghiêng và chập chờn theo độ mạnh của hơi thổi**. Thổi đủ lâu thì từng ngọn tắt và bốc khói.
 6. **Troll nhẹ:** có một cây "nến ma thuật" tự cháy lại một lần, phải thổi thêm phát nữa.
 7. Tắt hết nến: confetti, hộp nhạc Happy Birthday, rồi nhạc nền quay lại.
@@ -131,7 +131,7 @@ Chỉ nên chọn native khi đằng nào cũng muốn học SwiftUI **và** ch�
 1. Con dao chạy theo ngón tay.
 2. Vuốt một đường từ trên xuống qua bánh: vệt cắt hiện ra, bánh tách đôi và trượt sang hai bên.
 3. **Bất ngờ giữa bánh:** bên trong giấu một phong bì nhỏ, dẫn thẳng sang chương lá thư.
-4. Nếu vuốt ngắn quá hoặc lệch ra ngoài bánh: dao lắc lắc, kèm dòng *"cắt dứt khoát lên nào"*.
+4. Nếu vuốt ngắn quá hoặc lệch ra ngoài bánh: dao lắc lắc, kèm dòng _"cắt dứt khoát lên nào"_.
 
 **Kỹ thuật:** bánh là một ảnh/SVG, render thành 2 bản với `clip-path: polygon(...)` tính từ đường vuốt, rồi animate hai nửa tách ra. Không cần physics hay 3D.
 
@@ -176,16 +176,16 @@ Chọn 1, hoặc gộp cả hai:
 
 ## 5. Stack đề xuất
 
-| Phần | Chọn | Vì sao |
-|---|---|---|
-| Build | **Vite + React + TypeScript** | Nhẹ, deploy lên Vercel không cần cấu hình |
+| Phần                              | Chọn                                          | Vì sao                                         |
+| --------------------------------- | --------------------------------------------- | ---------------------------------------------- |
+| Build                             | **Vite + React + TypeScript**                 | Nhẹ, deploy lên Vercel không cần cấu hình      |
 | Animation, kéo thả, chuyển chương | **Motion** (motion.dev, tên cũ Framer Motion) | Có sẵn `drag`, `AnimatePresence`, xử lý cử chỉ |
-| Confetti | **canvas-confetti** | Một dòng code là xong |
-| Rung trên iOS | **ios-haptics** (tijnjh) | Dùng mẹo `<input switch>` của Safari |
-| PWA | **vite-plugin-pwa** | Lo manifest, icon, chạy offline |
-| Style | Tailwind hoặc CSS modules | Quen cái nào dùng cái đó |
-| Nội dung | 1 file `content.ts` | Ảnh, caption, thư, coupon tách riêng khỏi code |
-| Lưu tiến độ | `localStorage` | Lỡ đóng tab thì mở lại vẫn đúng chương |
+| Confetti                          | **canvas-confetti**                           | Một dòng code là xong                          |
+| Rung trên iOS                     | **ios-haptics** (tijnjh)                      | Dùng mẹo `<input switch>` của Safari           |
+| PWA                               | **vite-plugin-pwa**                           | Lo manifest, icon, chạy offline                |
+| Style                             | Tailwind hoặc CSS modules                     | Quen cái nào dùng cái đó                       |
+| Nội dung                          | 1 file `content.ts`                           | Ảnh, caption, thư, coupon tách riêng khỏi code |
+| Lưu tiến độ                       | `localStorage`                                | Lỡ đóng tab thì mở lại vẫn đúng chương         |
 
 **Không khuyên dùng Three.js / React Three Fiber (3D):**
 
@@ -244,7 +244,11 @@ public/photos/  public/sfx/  public/music/
 // Gọi TRONG handler của một cú chạm
 const stream = await navigator.mediaDevices.getUserMedia({
   // tắt các bộ lọc: chúng có thể lọc mất tiếng thổi
-  audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+  audio: {
+    echoCancellation: false,
+    noiseSuppression: false,
+    autoGainControl: false,
+  },
 });
 const ctx = new AudioContext();
 const analyser = ctx.createAnalyser();
@@ -253,7 +257,7 @@ ctx.createMediaStreamSource(stream).connect(analyser);
 const buf = new Float32Array(analyser.fftSize);
 
 let baseline = 0.01; // tiếng ồn nền, tự cập nhật
-let blowMs = 0;      // đã thổi liên tục bao lâu
+let blowMs = 0; // đã thổi liên tục bao lâu
 let last = performance.now();
 
 function tick(now: number) {
@@ -277,7 +281,7 @@ requestAnimationFrame(tick);
 ```
 
 - **Các con số `4`, `0.05`, `400ms` chỉ là điểm xuất phát.** Phải chỉnh lại trên iPhone thật, tốt nhất là cùng đời máy với người ấy.
-- **Bản nâng cao:** đo thêm *spectral flatness* để phân biệt thổi (giống nhiễu trắng) với nói hoặc hát (có cao độ). Bản cơ bản thì hét to vào mic cũng tắt được nến.
+- **Bản nâng cao:** đo thêm _spectral flatness_ để phân biệt thổi (giống nhiễu trắng) với nói hoặc hát (có cao độ). Bản cơ bản thì hét to vào mic cũng tắt được nến.
 
 ---
 
@@ -287,22 +291,22 @@ requestAnimationFrame(tick);
 
 ### Chuyên về thổi nến bằng mic
 
-| Repo | Có gì đáng lấy |
-|---|---|
-| [shoproizoshlo/bd-cake-react](https://github.com/shoproizoshlo/bd-cake-react) | React, nến tắt dần khi thổi. Gần với stack đề xuất nhất |
+| Repo                                                                                  | Có gì đáng lấy                                                 |
+| ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| [shoproizoshlo/bd-cake-react](https://github.com/shoproizoshlo/bd-cake-react)         | React, nến tắt dần khi thổi. Gần với stack đề xuất nhất        |
 | [VIDAKHOSHPEY22/3D-Birthday-Cake](https://github.com/VIDAKHOSHPEY22/3D-Birthday-Cake) | Web Audio phát hiện thổi, **có sẵn phương án chạm cho mobile** |
-| [sherryuser/cake-blow](https://github.com/sherryuser/cake-blow) | Chạm để cắm nến rồi thổi. Từng viral trên Instagram |
-| [patrick-paul/happybirthday](https://github.com/patrick-paul/happybirthday) | Thổi nến bằng mic + confetti + timeline |
-| [lovesulei/birthdaycandles](https://github.com/lovesulei/birthdaycandles) | Ngọn lửa có animation, tắt khi thổi |
+| [sherryuser/cake-blow](https://github.com/sherryuser/cake-blow)                       | Chạm để cắm nến rồi thổi. Từng viral trên Instagram            |
+| [patrick-paul/happybirthday](https://github.com/patrick-paul/happybirthday)           | Thổi nến bằng mic + confetti + timeline                        |
+| [lovesulei/birthdaycandles](https://github.com/lovesulei/birthdaycandles)             | Ngọn lửa có animation, tắt khi thổi                            |
 
 ### Có trọn một flow
 
-| Repo | Có gì đáng lấy |
-|---|---|
-| [naborajs/birthday-bloom](https://github.com/naborajs/birthday-bloom) | React + Motion + R3F: cắt bánh 3D, thổi nến, polaroid nghiêng 3D, chạy theo các màn `splash → unlock → intro → main`. **Hợp để tham khảo kiến trúc**, nhưng rất nặng (thừa SEO, nút share, đa ngôn ngữ) |
-| [sapthesh/Birthday-V3](https://github.com/sapthesh/Birthday-V3) | JS thuần, không thư viện: phong bì → lá thư mở ra → chữ gõ dần → bóng bay. **Hợp để tham khảo chương lá thư** |
-| [aungbbo/birthday-surprise-template](https://github.com/aungbbo/birthday-surprise-template) | Gallery ảnh khung polaroid |
-| [github.com/topics/birthday-website](https://github.com/topics/birthday-website) | Chỗ để lục thêm |
+| Repo                                                                                        | Có gì đáng lấy                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [naborajs/birthday-bloom](https://github.com/naborajs/birthday-bloom)                       | React + Motion + R3F: cắt bánh 3D, thổi nến, polaroid nghiêng 3D, chạy theo các màn `splash → unlock → intro → main`. **Hợp để tham khảo kiến trúc**, nhưng rất nặng (thừa SEO, nút share, đa ngôn ngữ) |
+| [sapthesh/Birthday-V3](https://github.com/sapthesh/Birthday-V3)                             | JS thuần, không thư viện: phong bì → lá thư mở ra → chữ gõ dần → bóng bay. **Hợp để tham khảo chương lá thư**                                                                                           |
+| [aungbbo/birthday-surprise-template](https://github.com/aungbbo/birthday-surprise-template) | Gallery ảnh khung polaroid                                                                                                                                                                              |
+| [github.com/topics/birthday-website](https://github.com/topics/birthday-website)            | Chỗ để lục thêm                                                                                                                                                                                         |
 
 ### Thư viện
 
@@ -317,18 +321,18 @@ requestAnimationFrame(tick);
 
 Tính theo giờ code tập trung, có Claude hỗ trợ. Nếu tự code từ đầu thì nhân khoảng 1,5.
 
-| # | Việc | Giờ | Có trong MVP? |
-|---|---|---|---|
-| 1 | **Làm thử phần thổi nến bằng mic**, deploy Vercel, test iPhone thật | 1–2 | ✅ làm đầu tiên |
-| 2 | Khung dự án + chuyển chương + bộ đếm phim + nhạc nền | 3 | ✅ |
-| 3 | Chương 3: thắp & thổi nến (diêm, ước, mic, phương án dự phòng) | 6–7 | ✅ (bỏ phần diêm và nến ma thuật) |
-| 4 | Chương 2: rửa ảnh (máy ảnh, ảnh hiện dần, bảng scrapbook, lật ảnh) | 5–6 | ✅ (chỉ làm bảng scrapbook + lật ảnh) |
-| 5 | Chương 5: lá thư | 3 | ✅ |
-| 6 | Chương 0 + 1: mở khoá + lời mời | 3 | ⏭ |
-| 7 | Chương 4: cắt bánh | 4 | ⏭ |
-| 8 | Chương 6: coupon cào + màn kết | 3 | ⏭ |
-| 9 | Hoàn thiện: SFX, ảnh preview link, PWA, test trên iPhone | 4 | ✅ (phần test) |
-| | **Tổng** | **~30–35** | **MVP ~15** |
+| #   | Việc                                                                | Giờ        | Có trong MVP?                         |
+| --- | ------------------------------------------------------------------- | ---------- | ------------------------------------- |
+| 1   | **Làm thử phần thổi nến bằng mic**, deploy Vercel, test iPhone thật | 1–2        | ✅ làm đầu tiên                       |
+| 2   | Khung dự án + chuyển chương + bộ đếm phim + nhạc nền                | 3          | ✅                                    |
+| 3   | Chương 3: thắp & thổi nến (diêm, ước, mic, phương án dự phòng)      | 6–7        | ✅ (bỏ phần diêm và nến ma thuật)     |
+| 4   | Chương 2: rửa ảnh (máy ảnh, ảnh hiện dần, bảng scrapbook, lật ảnh)  | 5–6        | ✅ (chỉ làm bảng scrapbook + lật ảnh) |
+| 5   | Chương 5: lá thư                                                    | 3          | ✅                                    |
+| 6   | Chương 0 + 1: mở khoá + lời mời                                     | 3          | ⏭                                    |
+| 7   | Chương 4: cắt bánh                                                  | 4          | ⏭                                    |
+| 8   | Chương 6: coupon cào + màn kết                                      | 3          | ⏭                                    |
+| 9   | Hoàn thiện: SFX, ảnh preview link, PWA, test trên iPhone            | 4          | ✅ (phần test)                        |
+|     | **Tổng**                                                            | **~30–35** | **MVP ~15**                           |
 
 ---
 
@@ -358,6 +362,7 @@ Phần không phải code nhưng tốn thời gian hơn mình tưởng.
 Nguồn: agy (Gemini 3.8 Flash) đưa 15 ý tưởng, Claude tự research thêm (VnExpress, Wikipedia, Nature, SABR, Billboard). Các con số agy tự bịa ("85% web sinh nhật…") đã bị loại.
 
 **Đã đưa vào app:**
+
 1. Mật khẩu `2110`. Gõ `2010` (ngày Phụ nữ) có câu trả lời riêng; `1021`, `2004` cũng có. (ý agy, viết lại cho "quý ông")
 2. Màn "Do you accept turning 22?": bấm I APPEAL thì "Court of Birthdays" đóng dấu DENIED, 5 lần rồi hết quyền kháng cáo. Thay cho nút NO chạy trốn (quá phổ biến). (ý agy)
 3. **The Morning Gazette**, trang nhất ngày 21/10/2004, xoay vào như phim cũ. Tin thật đã kiểm tra:
@@ -372,6 +377,7 @@ Nguồn: agy (Gemini 3.8 Flash) đưa 15 ý tưởng, Claude tự research thêm
 8. Credits cuối phim: "Nguyễn Mai Anh in Twenty-Two", "No jackfruits were harmed…". (ý agy)
 
 **Không làm (lý do):**
+
 - Lắc điện thoại để tráng ảnh: iOS phải xin quyền cảm biến, dễ hỏng.
 - Flashbulb thay mic: bạn muốn thổi nến thật.
 - Bánh xe ratchet để chuyển cảnh: đã có film leader.

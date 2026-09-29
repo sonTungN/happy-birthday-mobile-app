@@ -1,8 +1,8 @@
 export interface Placed {
-  index: number
+  index: number;
   /** Center of the print on the board, in px */
-  x: number
-  y: number
+  x: number;
+  y: number;
 }
 
 /**
@@ -10,12 +10,14 @@ export interface Placed {
  * Prints whose centers are less than `rowHeight` apart vertically count as one row.
  */
 export function readingOrder(placed: Placed[], rowHeight: number): number[] {
-  const byY = [...placed].sort((a, b) => a.y - b.y)
-  const rows: Placed[][] = []
+  const byY = [...placed].sort((a, b) => a.y - b.y);
+  const rows: Placed[][] = [];
   for (const p of byY) {
-    const row = rows[rows.length - 1]
-    if (row && p.y - row[0].y < rowHeight) row.push(p)
-    else rows.push([p])
+    const row = rows[rows.length - 1];
+    if (row && p.y - row[0].y < rowHeight) row.push(p);
+    else rows.push([p]);
   }
-  return rows.flatMap((row) => row.sort((a, b) => a.x - b.x).map((p) => p.index))
+  return rows.flatMap((row) =>
+    row.sort((a, b) => a.x - b.x).map((p) => p.index),
+  );
 }

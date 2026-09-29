@@ -7,7 +7,12 @@
   /* ---- Polaroid: the print's paper and vignette, the masking tape ---- */
 
   .polaroid-card {
-    background: linear-gradient(165deg, #faf8f2 0%, var(--color-bone) 60%, #d8d2c5 100%);
+    background: linear-gradient(
+      165deg,
+      #faf8f2 0%,
+      var(--color-bone) 60%,
+      #d8d2c5 100%
+    );
     box-shadow:
       0 1px 1px rgba(0, 0, 0, 0.25),
       0 14px 28px rgba(0, 0, 0, 0.5);
@@ -15,7 +20,7 @@
 
   /* Soft inner vignette, like a real print */
   .polaroid-photo::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -27,12 +32,35 @@
   /* Torn ends */
   .tape {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    clip-path: polygon(0 8%, 3% 0, 6% 10%, 9% 0, 91% 0, 94% 10%, 97% 0, 100% 8%, 100% 92%, 97% 100%, 94% 90%, 91% 100%, 9% 100%, 6% 90%, 3% 100%, 0 92%);
+    clip-path: polygon(
+      0 8%,
+      3% 0,
+      6% 10%,
+      9% 0,
+      91% 0,
+      94% 10%,
+      97% 0,
+      100% 8%,
+      100% 92%,
+      97% 100%,
+      94% 90%,
+      91% 100%,
+      9% 100%,
+      6% 90%,
+      3% 100%,
+      0 92%
+    );
   }
 
   .tape-paper {
     background:
-      linear-gradient(90deg, rgba(255, 255, 255, 0.25), transparent 30%, rgba(255, 255, 255, 0.2) 70%, transparent),
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.25),
+        transparent 30%,
+        rgba(255, 255, 255, 0.2) 70%,
+        transparent
+      ),
       rgba(226, 219, 203, 0.82);
   }
 
@@ -45,12 +73,22 @@
   /* ---- Leader: the countdown at the head of a reel ---- */
 
   .leader-screen {
-    background: radial-gradient(ellipse 78% 58% at 50% 50%, #cfccc6 0%, #a7a49e 38%, #585754 76%, #171717 100%);
+    background: radial-gradient(
+      ellipse 78% 58% at 50% 50%,
+      #cfccc6 0%,
+      #a7a49e 38%,
+      #585754 76%,
+      #171717 100%
+    );
   }
 
   /* The hand sweeping round the dial, darkening what it has passed */
   .leader-sweep {
-    background: conic-gradient(from 0deg at 50% 50%, rgba(20, 20, 20, 0.2) 0deg var(--sweep), rgba(255, 255, 255, 0.05) var(--sweep) 360deg);
+    background: conic-gradient(
+      from 0deg at 50% 50%,
+      rgba(20, 20, 20, 0.2) 0deg var(--sweep),
+      rgba(255, 255, 255, 0.05) var(--sweep) 360deg
+    );
     animation: leader-sweep 0.8s linear forwards;
   }
 
@@ -63,14 +101,18 @@
 
   .envelope-letter {
     background:
-      repeating-linear-gradient(transparent 0 14px, rgba(60, 60, 60, 0.18) 14px 15px) 0 18px / 100% calc(100% - 30px) no-repeat,
+      repeating-linear-gradient(
+          transparent 0 14px,
+          rgba(60, 60, 60, 0.18) 14px 15px
+        )
+        0 18px / 100% calc(100% - 30px) no-repeat,
       var(--color-paper);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   /* A ring pulsing out of the seal while it waits to be tapped */
   .envelope-pulse::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -6px;
     border-radius: 50%;
@@ -79,7 +121,12 @@
 
   .envelope-wax {
     border-radius: 48% 52% 50% 50% / 50% 47% 53% 50%;
-    background: radial-gradient(circle at 35% 30%, #5b5b5b, #1b1b1b 58%, #080808);
+    background: radial-gradient(
+      circle at 35% 30%,
+      #5b5b5b,
+      #1b1b1b 58%,
+      #080808
+    );
     box-shadow:
       0 3px 6px rgba(0, 0, 0, 0.5),
       inset 0 -3px 6px rgba(0, 0, 0, 0.5),
@@ -91,7 +138,7 @@
 
   /* The pressed rim */
   .envelope-wax::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 11%;
     border: 2px solid rgba(255, 255, 255, 0.12);
@@ -101,7 +148,12 @@
   /* ---- Candle: the flame (bends with --blow, leans with --lean), its glow and the smoke ---- */
 
   .candle-glow {
-    background: radial-gradient(circle, rgba(255, 244, 222, 0.42) 0%, rgba(255, 236, 205, 0.12) 40%, rgba(255, 230, 200, 0) 70%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 244, 222, 0.42) 0%,
+      rgba(255, 236, 205, 0.12) 40%,
+      rgba(255, 230, 200, 0) 70%
+    );
     scale: calc(1 - var(--blow, 0) * 0.5);
     animation: candle-breathe 2.4s ease-in-out infinite alternate;
     animation-delay: calc(var(--seed, 0) * -0.7s);
@@ -119,14 +171,25 @@
   /* A pale, almost colorless flame, like on old film stock */
   .candle-fire {
     border-radius: 50% 50% 45% 45% / 62% 62% 38% 38%;
-    background: radial-gradient(ellipse 60% 70% at 50% 72%, #ffffff 0%, #fff8e8 30%, #f3e2c0 55%, rgba(230, 205, 160, 0.8) 76%, rgba(220, 190, 140, 0) 100%);
+    background: radial-gradient(
+      ellipse 60% 70% at 50% 72%,
+      #ffffff 0%,
+      #fff8e8 30%,
+      #f3e2c0 55%,
+      rgba(230, 205, 160, 0.8) 76%,
+      rgba(220, 190, 140, 0) 100%
+    );
     transform-origin: 50% 90%;
     animation: candle-flicker 0.16s ease-in-out infinite alternate;
     animation-delay: calc(var(--lean, 1) * -0.11s);
   }
 
   .candle-core {
-    background: radial-gradient(ellipse at 50% 60%, rgba(40, 40, 40, 0.55), rgba(40, 40, 40, 0) 70%);
+    background: radial-gradient(
+      ellipse at 50% 60%,
+      rgba(40, 40, 40, 0.55),
+      rgba(40, 40, 40, 0) 70%
+    );
   }
 
   .candle-smoke span {
@@ -136,7 +199,11 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(230, 230, 230, 0.6), rgba(230, 230, 230, 0) 70%);
+    background: radial-gradient(
+      circle,
+      rgba(230, 230, 230, 0.6),
+      rgba(230, 230, 230, 0) 70%
+    );
     opacity: 0;
     animation: candle-smoke 2.2s ease-out forwards;
   }
@@ -155,19 +222,36 @@
 
   .film-strip {
     background: #1c1a17;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 16%,
+      #000 84%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 16%,
+      #000 84%,
+      transparent
+    );
   }
 
   /* Sprocket holes, top and bottom: four per frame */
   .film-track::before,
   .film-track::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     right: 0;
     height: 4px;
-    background: repeating-linear-gradient(90deg, transparent 0 2.75px, rgba(236, 232, 222, 0.78) 2.75px 6.75px, transparent 6.75px 9.5px);
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0 2.75px,
+      rgba(236, 232, 222, 0.78) 2.75px 6.75px,
+      transparent 6.75px 9.5px
+    );
   }
 
   .film-track::before {
@@ -190,7 +274,7 @@
   /* A star in each top corner */
   .invite-card::before,
   .invite-card::after {
-    content: '✦';
+    content: "✦";
     position: absolute;
     top: 8px;
     font-size: 11px;
@@ -223,18 +307,44 @@
       6px 8px 0 rgba(0, 0, 0, 0.5);
     /* --notch: the tear-off line's offset, measured in Invitation.tsx */
     -webkit-mask:
-      radial-gradient(circle at left var(--notch, 71%), transparent 11px, #000 11.5px) left / 51% 100% no-repeat,
-      radial-gradient(circle at right var(--notch, 71%), transparent 11px, #000 11.5px) right / 51% 100% no-repeat;
+      radial-gradient(
+          circle at left var(--notch, 71%),
+          transparent 11px,
+          #000 11.5px
+        )
+        left / 51% 100% no-repeat,
+      radial-gradient(
+          circle at right var(--notch, 71%),
+          transparent 11px,
+          #000 11.5px
+        )
+        right / 51% 100% no-repeat;
     mask:
-      radial-gradient(circle at left var(--notch, 71%), transparent 11px, #000 11.5px) left / 51% 100% no-repeat,
-      radial-gradient(circle at right var(--notch, 71%), transparent 11px, #000 11.5px) right / 51% 100% no-repeat;
+      radial-gradient(
+          circle at left var(--notch, 71%),
+          transparent 11px,
+          #000 11.5px
+        )
+        left / 51% 100% no-repeat,
+      radial-gradient(
+          circle at right var(--notch, 71%),
+          transparent 11px,
+          #000 11.5px
+        )
+        right / 51% 100% no-repeat;
   }
 
   /* ---- Letter: aged writing paper with foxed edges and faint rules ---- */
 
+  /* The rules run 34px apart from 76px down: the paragraphs (Letter.tsx: 36px padding, a 44px greeting, 34px
+     lines) write 4px above them, easier to read than right on the line */
   .letter-paper {
     background:
-      repeating-linear-gradient(transparent 0 33px, rgba(60, 60, 60, 0.13) 33px 34px) 0 70px / 100% calc(100% - 90px) no-repeat,
+      repeating-linear-gradient(
+          transparent 0 33px,
+          rgba(60, 60, 60, 0.13) 33px 34px
+        )
+        0 76px / 100% calc(100% - 90px) no-repeat,
       radial-gradient(ellipse at 50% 40%, #f6f2e9 40%, #e6e0d3 100%);
     box-shadow:
       inset 0 0 60px rgba(120, 105, 80, 0.18),
@@ -244,7 +354,7 @@
   /* ---- CakeCut: the arrow at the end of the cutting guide, the glow behind the envelope ---- */
 
   .cake-guide::after {
-    content: '';
+    content: "";
     position: absolute;
     left: -8px;
     bottom: -2px;
@@ -253,7 +363,12 @@
   }
 
   .cake-glow {
-    background: radial-gradient(circle, rgba(255, 252, 245, 0.5) 0%, rgba(255, 250, 240, 0.15) 40%, transparent 68%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 252, 245, 0.5) 0%,
+      rgba(255, 250, 240, 0.15) 40%,
+      transparent 68%
+    );
     animation: cake-glow 2.4s ease-in-out infinite alternate;
   }
 
@@ -299,7 +414,7 @@
     background-color: #dfddd7;
     background-image:
       radial-gradient(circle, rgba(27, 26, 23, 0.2) 0.8px, transparent 1.2px),
-      url('../assets/textures/newsprint.webp');
+      url("../assets/textures/newsprint.webp");
     background-size:
       18px 18px,
       900px 900px;
@@ -307,7 +422,7 @@
   }
 
   .news-dateline::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     right: 0;
@@ -318,20 +433,31 @@
 
   /* Where the paper was folded in half: a soft crease right across the sheet */
   .news-fold::before {
-    content: '';
+    content: "";
     position: absolute;
     left: -20px;
     right: -20px;
     top: -14px;
     height: 12px;
-    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.05) 45%, rgba(255, 255, 255, 0.45) 55%, rgba(0, 0, 0, 0.03) 70%, transparent);
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(0, 0, 0, 0.05) 45%,
+      rgba(255, 255, 255, 0.45) 55%,
+      rgba(0, 0, 0, 0.03) 70%,
+      transparent
+    );
     pointer-events: none;
   }
 
   /* A cut-out: black and white, a red outline slightly off register, a soft shadow on the paper */
   .news-cutout img {
-    filter: grayscale(1) contrast(1.1) drop-shadow(2px 0 0 var(--color-pen)) drop-shadow(-2px 0 0 var(--color-pen)) drop-shadow(0 2px 0 var(--color-pen))
-      drop-shadow(0 -2px 0 var(--color-pen)) drop-shadow(1.5px 2px 0 var(--color-pen)) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.22));
+    filter: grayscale(1) contrast(1.1) drop-shadow(2px 0 0 var(--color-pen))
+      drop-shadow(-2px 0 0 var(--color-pen))
+      drop-shadow(0 2px 0 var(--color-pen))
+      drop-shadow(0 -2px 0 var(--color-pen))
+      drop-shadow(1.5px 2px 0 var(--color-pen))
+      drop-shadow(0 8px 10px rgba(0, 0, 0, 0.22));
   }
 
   /* A press photo: printed in halftone */
@@ -340,12 +466,27 @@
   }
 
   .news-press::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 5px;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.28) 0.55px, transparent 0.95px) 0 0 / 3px 3px;
+    background: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 0.28) 0.55px,
+        transparent 0.95px
+      )
+      0 0 / 3px 3px;
     mix-blend-mode: multiply;
     pointer-events: none;
+  }
+
+  /* The lead story opens with a drop cap, two lines tall */
+  .news-dropcap::first-letter {
+    float: left;
+    margin: 5px 7px 0 0;
+    font-size: 52px;
+    line-height: 0.75;
+    font-weight: 640;
+    color: var(--color-news-ink);
   }
 
   /* ---- Candles: the match box, the match, the sparks ---- */
@@ -359,7 +500,8 @@
 
   .match-striker {
     background:
-      radial-gradient(circle, rgba(255, 255, 255, 0.18) 1px, transparent 1.5px) 0 0 / 5px 5px,
+      radial-gradient(circle, rgba(255, 255, 255, 0.18) 1px, transparent 1.5px)
+        0 0 / 5px 5px,
       #3a3836;
   }
 
@@ -385,11 +527,15 @@
   /* Notches on both sides (the foil gets the same shape) */
   .ticket-notches {
     -webkit-mask:
-      radial-gradient(circle at left 62%, transparent 9px, #000 9.5px) left / 51% 100% no-repeat,
-      radial-gradient(circle at right 62%, transparent 9px, #000 9.5px) right / 51% 100% no-repeat;
+      radial-gradient(circle at left 62%, transparent 9px, #000 9.5px) left /
+        51% 100% no-repeat,
+      radial-gradient(circle at right 62%, transparent 9px, #000 9.5px) right /
+        51% 100% no-repeat;
     mask:
-      radial-gradient(circle at left 62%, transparent 9px, #000 9.5px) left / 51% 100% no-repeat,
-      radial-gradient(circle at right 62%, transparent 9px, #000 9.5px) right / 51% 100% no-repeat;
+      radial-gradient(circle at left 62%, transparent 9px, #000 9.5px) left /
+        51% 100% no-repeat,
+      radial-gradient(circle at right 62%, transparent 9px, #000 9.5px) right /
+        51% 100% no-repeat;
   }
 
   .ticket-paper {
@@ -419,7 +565,12 @@
 
   .camera-body {
     background:
-      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 1.5px) 0 0 / 4px 4px,
+      radial-gradient(
+          circle at 1px 1px,
+          rgba(255, 255, 255, 0.06) 1px,
+          transparent 1.5px
+        )
+        0 0 / 4px 4px,
       linear-gradient(180deg, #2d2d2d 0%, #1b1b1b 60%, #111 100%);
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.08),
@@ -428,7 +579,7 @@
 
   /* Chrome top plate */
   .camera-body::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     right: 0;
@@ -447,15 +598,24 @@
 
   /* Glass sheen over the viewfinder */
   .camera-finder::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), transparent 45%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.28),
+      transparent 45%
+    );
   }
 
   .camera-door {
     background:
-      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 1.5px) 0 0 / 4px 4px,
+      radial-gradient(
+          circle at 1px 1px,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1.5px
+        )
+        0 0 / 4px 4px,
       linear-gradient(180deg, #262626, #161616);
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.07),
@@ -468,8 +628,23 @@
   /* The lens: dark glass, rings of the barrel, a chrome rim */
   .camera-lens {
     background:
-      radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.35), transparent 22%),
-      radial-gradient(circle at 50% 50%, #0a0a0a 0%, #050505 46%, #2a2a2a 50%, #101010 56%, #3b3b3b 62%, #151515 66%, #6d6b66 70%, #d7d5cf 75%, #8f8d88 100%);
+      radial-gradient(
+        circle at 38% 32%,
+        rgba(255, 255, 255, 0.35),
+        transparent 22%
+      ),
+      radial-gradient(
+        circle at 50% 50%,
+        #0a0a0a 0%,
+        #050505 46%,
+        #2a2a2a 50%,
+        #101010 56%,
+        #3b3b3b 62%,
+        #151515 66%,
+        #6d6b66 70%,
+        #d7d5cf 75%,
+        #8f8d88 100%
+      );
     box-shadow:
       0 6px 14px rgba(0, 0, 0, 0.6),
       inset 0 0 0 1px rgba(255, 255, 255, 0.12);
@@ -486,18 +661,26 @@
 
   /* Glass sheen over the mirror */
   .camera-mirror::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.35), transparent 48%);
+    background: linear-gradient(
+      140deg,
+      rgba(255, 255, 255, 0.35),
+      transparent 48%
+    );
     pointer-events: none;
   }
 
   /* The flash: a frosted, ridged window on the chrome plate */
   .camera-flash {
     background:
-      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0 2px, transparent 2px 5px),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.35) 0 2px,
+        transparent 2px 5px
+      ),
       linear-gradient(180deg, #e9e6df, #b9b6ae);
     box-shadow:
       inset 0 0 0 1px rgba(0, 0, 0, 0.35),
@@ -515,14 +698,25 @@
 
   /* A glint sweeping across the print once it's developed */
   .dev-shine {
-    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 45%, transparent 60%) 120% 0 / 250% 100% no-repeat;
+    background: linear-gradient(
+        115deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.55) 45%,
+        transparent 60%
+      )
+      120% 0 / 250% 100% no-repeat;
     animation: dev-shine 0.9s ease-out forwards;
   }
 
-  /* The back of an old print: aged paper, faint rules */
+  /* The back of an old print: aged paper, faint rules 32px apart from 91px down, so the note (PhotoViewer.tsx:
+     a 34px top, a 44px head, 16px) writes 4px above them, easier to read than right on the line */
   .photo-back {
     background:
-      repeating-linear-gradient(transparent 0 31px, rgba(60, 60, 60, 0.16) 31px 32px) 0 76px / 100% 100% no-repeat,
+      repeating-linear-gradient(
+          transparent 0 31px,
+          rgba(60, 60, 60, 0.16) 31px 32px
+        )
+        0 91px / 100% 100% no-repeat,
       radial-gradient(ellipse at 30% 20%, #f6f2e8, #e2dccf 90%);
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
   }
@@ -532,7 +726,7 @@
 
 /* Leader */
 @property --sweep {
-  syntax: '<angle>';
+  syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }

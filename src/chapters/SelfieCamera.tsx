@@ -1,22 +1,33 @@
-import { useEffect, useRef, useState } from 'react'
-import { audio } from '../lib/audio'
-import { hapticRef } from '../lib/haptics'
-import { CameraError, dataUrlToBlob, keepPrint, openCamera, snapshot, stopStream, type CameraFault, type Facing } from '../lib/selfie'
+import { useEffect, useRef, useState } from "react";
+import { audio } from "../lib/audio";
+import { hapticRef } from "../lib/haptics";
+import {
+  CameraError,
+  dataUrlToBlob,
+  keepPrint,
+  openCamera,
+  snapshot,
+  stopStream,
+  type CameraFault,
+  type Facing,
+} from "../lib/selfie";
 
 interface SelfieCameraProps {
   /** She printed it: the picture (a data URL) and her line for the back of the print */
-  onPrint: (src: string, message: string) => void
+  onPrint: (src: string, message: string) => void;
   /** No camera to be had: the print comes out blank */
-  onBlank: () => void
+  onBlank: () => void;
   /** Back to the darkroom without a picture */
-  onClose: () => void
+  onClose: () => void;
 }
 
 /** Room on the back of a print */
-const MESSAGE_MAX = 90
-const ZOOMS = [1, 2]
+const MESSAGE_MAX = 90;
+/** How long the viewfinder may stay dark after the camera opened before it is asked again */
+const FIRST_FRAME_MS = 1800;
+const ZOOMS = [1, 2];
 /** A round button on black */
-const ROUND = 'grid place-items-center rounded-[50%] border-0 p-0 text-white'
+const ROUND = "grid place-items-center rounded-[50%] border-0 p-0 text-white";
 
 /**
  * The phone's camera, the way a camera app shows it: a square viewfinder, a shutter, zoom, and the other
@@ -24,88 +35,133 @@ const ROUND = 'grid place-items-center rounded-[50%] border-0 p-0 text-white'
  * and prints it, or keeps the photo as it is.
  */
 export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const [facing, setFacing] = useState<Facing>('user')
-  const [zoom, setZoom] = useState(1)
-  const [attempt, setAttempt] = useState(0)
-  const [fault, setFault] = useState<CameraFault | null>(null)
-  const [busy, setBusy] = useState(false)
-  const [shot, setShot] = useState<string | null>(null)
-  const [message, setMessage] = useState('')
-  const [editing, setEditing] = useState(false)
-  const mirror = facing === 'user'
-  const line = message.trim()
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [facing, setFacing] = useState<Facing>("user");
+  const [zoom, setZoom] = useState(1);
+  const [attempt, setAttempt] = useState(0);
+  /** Which opening of the camera (facing/attempt) has shown a picture */
+  const [readyFor, setReadyFor] = useState("");
+  /** The camera was already asked a second time, unprompted, for this opening */
+  const rescued = useRef(false);
+  const [fault, setFault] = useState<CameraFault | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [shot, setShot] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
+  const [editing, setEditing] = useState(false);
+  const mirror = facing === "user";
+  const line = message.trim();
+  const ready = readyFor === `${facing}/${attempt}`;
 
   // Open the camera; again when she switches cameras, or tries again after the browser said no
   useEffect(() => {
-    let live = true
-    let stream: MediaStream | null = null
+    let live = true;
+    let stream: MediaStream | null = null;
+    let framed = false;
+    let watchdog = 0;
+    const key = `${facing}/${attempt}`;
     openCamera(facing)
       .then(async (opened) => {
         if (!live) {
-          stopStream(opened)
-          return
+          stopStream(opened);
+          return;
         }
-        stream = opened
-        const video = videoRef.current
-        if (video) {
-          video.srcObject = opened
-          await video.play().catch(() => {})
-        }
-        setFault(null)
+        stream = opened;
+        const video = videoRef.current;
+        if (!video) return;
+        video.srcObject = opened;
+        // The first picture is on screen: the viewfinder is live
+        const onFrame = () => {
+          if (!live) return;
+          framed = true;
+          rescued.current = false;
+          setReadyFor(key);
+        };
+        if (typeof video.requestVideoFrameCallback === "function")
+          video.requestVideoFrameCallback(onFrame);
+        else video.addEventListener("playing", onFrame, { once: true });
+        await video.play().catch(() => {});
+        if (!live) return;
+        setFault(null);
+        // iOS now and then hands over a stream that never shows a picture (the first one after "Allow",
+        // above all), and asking again fixes it: if nothing has come after a moment, ask once more by itself
+        watchdog = window.setTimeout(() => {
+          if (!live || framed) return;
+          if (rescued.current) {
+            setFault("failed");
+            return;
+          }
+          rescued.current = true;
+          setAttempt((a) => a + 1);
+        }, FIRST_FRAME_MS);
       })
       .catch((err: unknown) => {
-        if (live) setFault(err instanceof CameraError ? err.reason : 'failed')
-      })
+        if (live) setFault(err instanceof CameraError ? err.reason : "failed");
+      });
     return () => {
-      live = false
-      stopStream(stream)
-    }
-  }, [facing, attempt])
+      live = false;
+      window.clearTimeout(watchdog);
+      stopStream(stream);
+    };
+  }, [facing, attempt]);
+
+  const tryAgain = () => {
+    rescued.current = false;
+    setAttempt((a) => a + 1);
+  };
 
   useEffect(() => {
-    if (editing) inputRef.current?.focus()
-  }, [editing])
+    if (editing) inputRef.current?.focus();
+  }, [editing]);
 
   const capture = () => {
-    const video = videoRef.current
-    if (busy || !video || video.videoWidth === 0) return
-    setBusy(true)
+    const video = videoRef.current;
+    if (busy || !video || video.videoWidth === 0) return;
+    setBusy(true);
     try {
-      audio.sfx('shutter')
-      setShot(snapshot(video, { mirror, zoom }))
+      audio.sfx("shutter");
+      setShot(snapshot(video, { mirror, zoom }));
     } catch {
       /* no picture this time: she can try again */
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
-  }
+  };
 
   const switchCamera = () => {
-    audio.sfx('tap')
-    setZoom(1)
-    setFacing((f) => (f === 'user' ? 'environment' : 'user'))
-  }
+    audio.sfx("tap");
+    setZoom(1);
+    rescued.current = false;
+    setFacing((f) => (f === "user" ? "environment" : "user"));
+  };
 
   const cycleZoom = () => {
-    audio.sfx('tap')
-    setZoom((z) => ZOOMS[(ZOOMS.indexOf(z) + 1) % ZOOMS.length])
-  }
+    audio.sfx("tap");
+    setZoom((z) => ZOOMS[(ZOOMS.indexOf(z) + 1) % ZOOMS.length]);
+  };
 
   const caption = shot
     ? line
-      ? 'Ready to print.'
-      : 'Add a line for the back of the print, then print it.'
+      ? "Ready to print."
+      : "Add a line for the back of the print, then print it."
     : fault
-      ? ''
-      : 'The ninth frame: you, today.'
+      ? ""
+      : ready
+        ? "The ninth frame: you, today."
+        : "Opening the camera…";
 
   return (
     <div className="absolute inset-0 flex flex-col bg-[#050505] pt-[calc(var(--safe-top)+62px)] pb-[calc(var(--safe-bottom)+18px)]">
       <div className="flex items-center justify-between px-4">
-        <span className="font-ui text-[11px] font-bold tracking-[0.22em] text-white/55 uppercase">The ninth frame</span>
-        <button type="button" className={`${ROUND} h-10 w-10 bg-white/12`} onClick={onClose} aria-label="Back to the darkroom">
+        <span className="font-ui text-[11px] font-bold tracking-[0.22em] text-white/55 uppercase">
+          The ninth frame
+        </span>
+        <button
+          type="button"
+          className={`${ROUND} h-10 w-10 bg-white/12`}
+          onClick={onClose}
+          aria-label="Back to the darkroom"
+        >
           <CloseIcon />
         </button>
       </div>
@@ -120,10 +176,21 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
           className="absolute inset-0 h-full w-full object-cover"
           style={{ transform: `scale(${mirror ? -zoom : zoom}, ${zoom})` }}
         />
-        {shot && <img src={shot} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+        {shot && (
+          <img
+            src={shot}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
 
         {!shot && !fault && (
-          <button type="button" className={`${ROUND} absolute top-4 right-4 h-11 w-11 bg-white/20 font-ui text-[13px] font-bold`} onClick={cycleZoom} aria-label={`Zoom ${zoom}×`}>
+          <button
+            type="button"
+            className={`${ROUND} absolute top-4 right-4 h-11 w-11 bg-white/20 font-ui text-[13px] font-bold`}
+            onClick={cycleZoom}
+            aria-label={`Zoom ${zoom}×`}
+          >
             {zoom}×
           </button>
         )}
@@ -139,7 +206,7 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
               onChange={(e) => setMessage(e.target.value)}
               onBlur={() => setEditing(false)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') e.currentTarget.blur()
+                if (e.key === "Enter") e.currentTarget.blur();
               }}
               className="absolute top-4 left-1/2 w-[min(84%,320px)] -translate-x-1/2 rounded-full border border-white/35 bg-[rgba(15,15,15,0.82)] px-4 py-2 text-center font-body text-[17px] text-white outline-none backdrop-blur-[6px] select-text placeholder:text-white/55"
             />
@@ -149,25 +216,35 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
               onClick={() => setEditing(true)}
               className="absolute bottom-4 left-1/2 max-w-[85%] -translate-x-1/2 truncate rounded-full border-0 bg-[rgba(15,15,15,0.72)] px-4 py-2 font-body text-[17px] text-white backdrop-blur-[6px]"
             >
-              {line || 'Add a message'}
+              {line || "Add a message"}
             </button>
           ))}
 
         {fault && !shot && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
-            <p className="font-display text-[22px] italic">The camera is off here.</p>
+            <p className="font-display text-[22px] italic">
+              The camera is off here.
+            </p>
             <p className="font-body text-[17px] leading-[1.4] text-white/75 italic">
-              {fault === 'insecure'
-                ? 'It needs a secure address (https).'
-                : fault === 'denied'
-                  ? 'Allow the camera for this site in Settings, then try again.'
-                  : 'This browser can’t open the camera. Try Safari.'}
+              {fault === "insecure"
+                ? "It needs a secure address (https)."
+                : fault === "denied"
+                  ? "Allow the camera for this site in Settings, then try again."
+                  : "This browser can’t open the camera. Try Safari."}
             </p>
             <div className="mt-2 flex gap-3">
-              <button type="button" className="btn btn-light" onClick={() => setAttempt((a) => a + 1)}>
+              <button
+                type="button"
+                className="btn btn-light"
+                onClick={tryAgain}
+              >
                 Try again
               </button>
-              <button type="button" className="btn btn-outline" onClick={onBlank}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={onBlank}
+              >
                 Leave it blank
               </button>
             </div>
@@ -175,55 +252,97 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
         )}
       </div>
 
-      <p className="mt-4 min-h-[24px] px-8 text-center font-body text-[17px] text-white/72 italic">{caption}</p>
+      <p className="mt-4 min-h-[24px] px-8 text-center font-body text-[17px] text-white/72 italic">
+        {caption}
+      </p>
 
       <div className="mt-auto flex items-center justify-around px-8">
         {shot ? (
           <>
-            <button type="button" className={`${ROUND} h-12 w-12 bg-white/12`} ref={hapticRef} onClick={() => setShot(null)} aria-label="Take it again">
+            <button
+              type="button"
+              className={`${ROUND} h-12 w-12 bg-white/12`}
+              ref={hapticRef}
+              onClick={() => setShot(null)}
+              aria-label="Take it again"
+            >
               <CloseIcon />
             </button>
             <button
               type="button"
-              className={`${ROUND} h-[78px] w-[78px] bg-bone text-ink disabled:opacity-35`}
+              className={`${ROUND} h-[78px] w-[78px] bg-bone text-ink`}
               ref={hapticRef}
-              disabled={!line}
               onClick={() => {
-                audio.sfx('paper')
-                onPrint(shot, line)
+                // A print needs a line on its back: without one, the message box opens instead
+                if (!line) {
+                  setEditing(true);
+                  return;
+                }
+                audio.sfx("paper");
+                onPrint(shot, line);
               }}
-              aria-label="Print it"
+              aria-label={line ? "Print it" : "Add a message, then print it"}
             >
               <PrintIcon />
             </button>
-            <button type="button" className={`${ROUND} h-12 w-12 bg-white/12`} ref={hapticRef} onClick={() => void keepPrint(dataUrlToBlob(shot), 'reel-twenty-two-photo.jpg')} aria-label="Save the photo">
+            <button
+              type="button"
+              className={`${ROUND} h-12 w-12 bg-white/12`}
+              ref={hapticRef}
+              onClick={() =>
+                void keepPrint(dataUrlToBlob(shot), "reel-twenty-two-photo.jpg")
+              }
+              aria-label="Save the photo"
+            >
               <DownloadIcon />
             </button>
           </>
         ) : (
           <>
             <span className="h-12 w-12" aria-hidden />
-            <button type="button" className={`${ROUND} h-[78px] w-[78px] border-[4px] border-white/95 bg-transparent`} ref={hapticRef} disabled={!!fault} onClick={capture} aria-label="Take the picture">
+            <button
+              type="button"
+              className={`${ROUND} h-[78px] w-[78px] border-[4px] border-white/95 bg-transparent`}
+              ref={hapticRef}
+              disabled={!!fault}
+              onClick={capture}
+              aria-label="Take the picture"
+            >
               <span className="block h-[60px] w-[60px] rounded-[50%] bg-white" />
             </button>
-            <button type="button" className={`${ROUND} h-12 w-12 bg-white/12`} ref={hapticRef} onClick={switchCamera} aria-label="Switch camera">
+            <button
+              type="button"
+              className={`${ROUND} h-12 w-12 bg-white/12`}
+              ref={hapticRef}
+              onClick={switchCamera}
+              aria-label="Switch camera"
+            >
               <SwitchIcon />
             </button>
           </>
         )}
       </div>
     </div>
-  )
+  );
 }
 
-const ICON = { viewBox: '0 0 24 24', className: 'h-6 w-6', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const
+const ICON = {
+  viewBox: "0 0 24 24",
+  className: "h-6 w-6",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+  "aria-hidden": true,
+} as const;
 
 function CloseIcon() {
   return (
     <svg {...ICON}>
       <path d="M6 6l12 12M18 6L6 18" />
     </svg>
-  )
+  );
 }
 
 function SwitchIcon() {
@@ -232,7 +351,7 @@ function SwitchIcon() {
       <path d="M4 12a8 8 0 0 1 13.7-5.7L20 8M20 3.5V8h-4.5" />
       <path d="M20 12a8 8 0 0 1-13.7 5.7L4 16M4 20.5V16h4.5" />
     </svg>
-  )
+  );
 }
 
 /** A print coming out of the slot */
@@ -243,7 +362,7 @@ function PrintIcon() {
       <rect x="4" y="8" width="16" height="7" rx="1.5" />
       <path d="M8 12h8v9H8z" />
     </svg>
-  )
+  );
 }
 
 function DownloadIcon() {
@@ -251,5 +370,5 @@ function DownloadIcon() {
     <svg {...ICON}>
       <path d="M12 4v11m-5-5 5 5 5-5M5 20h14" />
     </svg>
-  )
+  );
 }
