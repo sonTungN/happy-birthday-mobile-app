@@ -542,11 +542,14 @@ function MovingPicture({
     return () => audio.release("clip");
   }, [sound]);
 
+  // Goes by the element itself, not by what we last set: a browser can mute or pause it behind our back
   const toggleSound = () => {
     const video = videoRef.current;
     if (!video) return;
-    video.muted = sound;
-    setSound(!sound);
+    const on = video.muted;
+    video.muted = !on;
+    if (on) void video.play().catch(() => {});
+    setSound(on);
   };
 
   return (
@@ -566,10 +569,15 @@ function MovingPicture({
       <div className="mt-1 flow-root">
         <figure className="float-right mt-1.5 mr-0 mb-1 ml-3.5 w-[56%]">
           {/* Framed and printed in halftone like a press photo, but it moves (effects.css: .news-moving) */}
-          <button
-            type="button"
-            className="news-moving block w-full cursor-pointer border-0 p-[5px] text-left"
+          {/* A plain block takes the tap (a video inside a button can swallow it on iOS); the video gets none */}
+          <div
+            role="button"
+            tabIndex={0}
+            className="news-moving block w-full cursor-pointer p-[5px] select-none"
             onClick={toggleSound}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") toggleSound();
+            }}
             aria-label={sound ? clip.captionOn : clip.caption}
           >
             {src ? (
@@ -580,14 +588,14 @@ function MovingPicture({
                 loop
                 playsInline
                 preload="metadata"
-                className="block h-auto w-full"
+                className="pointer-events-none block h-auto w-full"
               />
             ) : (
               <div className="grid aspect-[9/16] place-items-center font-body text-[14px] italic">
                 No film in the camera
               </div>
             )}
-          </button>
+          </div>
           <figcaption className="mt-1.5 text-center font-body text-[12px] leading-[1.3] text-news-ink/75 italic">
             {sound ? clip.captionOn : clip.caption}
           </figcaption>

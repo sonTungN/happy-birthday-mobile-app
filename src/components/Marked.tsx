@@ -7,7 +7,6 @@ import {
   markerPath,
   parseMarks,
   seedOf,
-  underlinePath,
   type MarkKind,
 } from "../lib/marks";
 
@@ -29,7 +28,7 @@ const MARKER_SPEED = 900;
 const LINE_GAP = 0.07;
 
 interface MarkedProps {
-  /** Text with ==marker==, ((circle)), __underline__ and **bold** mark-up, placeholders already filled */
+  /** Text with ==marker==, ((circle)) and **bold** mark-up, placeholders already filled */
   text: string;
   as?: "h2" | "h3" | "p";
   className?: string;
@@ -81,11 +80,7 @@ export function Marked({
         for (const r of el.getClientRects()) {
           if (r.width < 2) continue;
           const duration =
-            part.mark === "marker"
-              ? 0.14 + r.width / MARKER_SPEED
-              : part.mark === "underline"
-                ? 0.1 + r.width / (MARKER_SPEED * 1.3)
-                : 0.65;
+            part.mark === "marker" ? 0.14 + r.width / MARKER_SPEED : 0.65;
           next.push({
             kind: part.mark,
             x: r.left - b.left,
@@ -142,13 +137,6 @@ export function Marked({
           {strokes.map((s, i) =>
             s.kind === "marker" ? (
               <MarkerStroke
-                key={i}
-                stroke={s}
-                delay={delay}
-                animate={drawing}
-              />
-            ) : s.kind === "underline" ? (
-              <PenUnderline
                 key={i}
                 stroke={s}
                 delay={delay}
@@ -241,36 +229,6 @@ function MarkerStroke({ stroke, delay, animate }: StrokeProps) {
       <path d={markerPath(w, h, stroke.seed)} fill={`url(#ink-${id})`} />
       <path d={markerPath(w, h, stroke.seed)} fill={`url(#streak-${id})`} />
     </motion.svg>
-  );
-}
-
-/** A red pen underline along one line of the phrase */
-function PenUnderline({ stroke, delay, animate }: StrokeProps) {
-  const pad = 3;
-  const w = stroke.w + pad * 2;
-  const h = stroke.h;
-  return (
-    <svg
-      className="absolute z-1 overflow-visible stroke-pen"
-      style={{ left: stroke.x - pad, top: stroke.y, width: w, height: h }}
-      viewBox={`0 0 ${w} ${h}`}
-      fill="none"
-      strokeWidth="1.9"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <motion.path
-        d={underlinePath(w, h, stroke.seed)}
-        initial={animate ? { pathLength: 0, opacity: 0 } : false}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{
-          delay: delay + stroke.at,
-          duration: stroke.duration,
-          ease: [0.4, 0, 0.3, 1],
-          opacity: { delay: delay + stroke.at, duration: 0.01 },
-        }}
-      />
-    </svg>
   );
 }
 

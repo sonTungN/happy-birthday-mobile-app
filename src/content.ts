@@ -85,19 +85,19 @@ export const content: Content = {
       },
       {
         tag: "Civic Affairs",
-        // The archive stories are lesser news: **bold** in the headline, a __pen underline__ in the text
+        // The archive stories are lesser news: **bold** in the headline instead of the marker
         headline: "Men’s Day Petition **Withdrawn**",
-        dek: "The 21st of October has been claimed, __permanently, by a baby girl.__",
+        dek: "The 21st of October has been claimed, ==permanently, by a baby girl.==",
       },
       {
         tag: "Sport",
         headline: "**Impossible Comeback** in Boston",
-        dek: "Down three games to none, the Red Sox win four straight. __Only the second most remarkable event of the week.__",
+        dek: "Down three games to none, the Red Sox win four straight. ==Only the second most remarkable event of the week.==",
       },
       {
         tag: "Science",
         headline: "**Fewer Genes** Than Thought",
-        dek: "Scientists count only 20,000 to 25,000. __Plenty, it turns out, to make her.__",
+        dek: "Scientists count only 20,000 to 25,000. ==Plenty, it turns out, to make her.==",
       },
     ],
     // Her, growing up, pasted onto the lead one after another (cut-outs from src/assets/photos/news/, see

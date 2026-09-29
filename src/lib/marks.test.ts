@@ -61,29 +61,19 @@ describe("stroke shapes", () => {
   });
 });
 
-describe("underline and bold marks", () => {
-  it("parses __underline__ and **bold** beside the other marks", () => {
+describe("bold marks", () => {
+  it("parses **bold** beside the other marks", () => {
     expect(parseMarks("Men’s Day Petition **Withdrawn**")).toEqual([
       { text: "Men’s Day Petition ", mark: null },
       { text: "Withdrawn", mark: "bold" },
     ]);
-    expect(parseMarks("claimed, __for good__ by ==a girl==")).toEqual([
-      { text: "claimed, ", mark: null },
-      { text: "for good", mark: "underline" },
+    expect(parseMarks("**Comeback** by ==a girl==")).toEqual([
+      { text: "Comeback", mark: "bold" },
       { text: " by ", mark: null },
       { text: "a girl", mark: "marker" },
     ]);
-    expect(unmarked("**Fewer Genes** Than __Thought__")).toBe(
+    expect(unmarked("**Fewer Genes** Than Thought")).toBe(
       "Fewer Genes Than Thought",
     );
-  });
-
-  it("draws an open, finite underline for any width", async () => {
-    const { underlinePath } = await import("./marks");
-    for (const w of [1, 12, 240]) {
-      const d = underlinePath(w, 24, 7);
-      expect(d.startsWith("M")).toBe(true);
-      expect(d).not.toMatch(/NaN|Infinity|Z/);
-    }
   });
 });
