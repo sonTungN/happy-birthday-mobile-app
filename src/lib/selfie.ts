@@ -36,6 +36,17 @@ export function stopStream(stream: MediaStream | null): void {
   stream?.getTracks().forEach((track) => track.stop())
 }
 
+/** This camera has a lamp the page may switch on (Android's back camera; iPhones don't let a page) */
+export function hasTorch(stream: MediaStream | null): boolean {
+  const track = stream?.getVideoTracks()[0]
+  try {
+    const caps = track?.getCapabilities?.() as { torch?: boolean } | undefined
+    return caps?.torch === true
+  } catch {
+    return false
+  }
+}
+
 /** The back camera's lamp, where the browser allows it (Android). Elsewhere nothing happens. */
 export async function setTorch(stream: MediaStream | null, on: boolean): Promise<void> {
   const track = stream?.getVideoTracks()[0]

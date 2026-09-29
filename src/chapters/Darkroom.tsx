@@ -1,5 +1,6 @@
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'motion/react'
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type RefObject } from 'react'
+import { Flip } from '../components/Flip'
 import { Polaroid, Tape } from '../components/Polaroid'
 import { content } from '../content'
 import { useWindOn } from '../lib/advance'
@@ -493,14 +494,14 @@ export default function Darkroom() {
             transition={{ duration: 0.5 }}
           >
             {/* The camera turns round on its vertical axis: the back she shoots with, the front that shoots her */}
-            <motion.span className="absolute inset-0 transform-3d" initial={false} animate={{ rotateY: turned ? 180 : 0 }} transition={{ duration: 1.1, ease: [0.65, 0, 0.35, 1] }}>
-              <span className="absolute inset-0 backface-hidden">
-                <CameraBack ready={phase === 'ready'} preview={pinned < total ? photoUrl(PHOTOS[pinned].file) : null} />
-              </span>
-              <span className="absolute inset-0 [transform:rotateY(180deg)] backface-hidden">
-                <CameraFront ready={phase === 'selfie'} lit={flashLit} />
-              </span>
-            </motion.span>
+            <Flip
+              as="span"
+              className="absolute inset-0"
+              turned={turned}
+              transition={{ duration: 1.1, ease: [0.65, 0, 0.35, 1] }}
+              first={<CameraBack ready={phase === 'ready'} preview={pinned < total ? photoUrl(PHOTOS[pinned].file) : null} />}
+              second={<CameraFront ready={phase === 'selfie'} lit={flashLit} />}
+            />
           </motion.button>
           {!done && hint && <p className="hint">{hint}</p>}
           {phase === 'selfie' && (

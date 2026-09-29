@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, type PanInfo } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
+import { Flip } from '../components/Flip'
 import { Polaroid } from '../components/Polaroid'
 import { content } from '../content'
 import { photoUrl } from '../lib/assets'
@@ -110,18 +111,21 @@ export function PhotoViewer({ photos, index, onIndex, keepAt, onClose }: PhotoVi
               setFlipped((f) => !f)
             }}
           >
-            <motion.div className="relative transform-3d" animate={{ rotateY: flipped ? 180 : 0 }} transition={{ type: 'spring', stiffness: 150, damping: 19 }}>
-              <div className="backface-hidden">
-                <Polaroid src={photoUrl(photo.file)} alt={photo.title} caption={photo.title} date={photo.date} focus={photo.focus} />
-              </div>
-              {/* The back of an old print: aged paper, faint rules, a note in ink (effects.css: .photo-back) */}
-              <div className="photo-back absolute inset-0 flex [transform:rotateY(180deg)] flex-col rounded-xs px-[9%] pt-[11%] pb-[9%] text-ink backface-hidden">
-                <p className="font-ui text-[13px] font-bold tracking-[0.18em] text-[#3a3a3a] uppercase">{formatShortDate(photo.date)}</p>
-                {photo.place && <p className="mt-1 font-body text-[17px] text-[#595754] italic">{photo.place}</p>}
-                <p className="mt-4 flex-1 font-body text-[21px] leading-[32px]">{photo.note}</p>
-                <p className="self-end font-script text-[28px] text-[#2a2a2a]">— {photo.signedBy ?? content.sender}</p>
-              </div>
-            </motion.div>
+            <Flip
+              className="relative"
+              turned={flipped}
+              transition={{ type: 'spring', stiffness: 150, damping: 19 }}
+              first={<Polaroid src={photoUrl(photo.file)} alt={photo.title} caption={photo.title} date={photo.date} focus={photo.focus} />}
+              second={
+                // The back of an old print: aged paper, faint rules, a note in ink (effects.css: .photo-back)
+                <div className="photo-back flex h-full flex-col rounded-xs px-[9%] pt-[11%] pb-[9%] text-ink">
+                  <p className="font-ui text-[13px] font-bold tracking-[0.18em] text-[#3a3a3a] uppercase">{formatShortDate(photo.date)}</p>
+                  {photo.place && <p className="mt-1 font-body text-[17px] text-[#595754] italic">{photo.place}</p>}
+                  <p className="mt-4 flex-1 font-body text-[21px] leading-[32px]">{photo.note}</p>
+                  <p className="self-end font-script text-[28px] text-[#2a2a2a]">— {photo.signedBy ?? content.sender}</p>
+                </div>
+              }
+            />
           </motion.div>
         </AnimatePresence>
       </motion.div>

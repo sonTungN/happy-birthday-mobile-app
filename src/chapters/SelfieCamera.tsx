@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { audio } from '../lib/audio'
 import { hapticRef } from '../lib/haptics'
-import { CameraError, dataUrlToBlob, keepPrint, openCamera, setTorch, snapshot, stopStream, type CameraFault, type Facing } from '../lib/selfie'
+import { CameraError, dataUrlToBlob, hasTorch, keepPrint, openCamera, setTorch as setLamp, snapshot, stopStream, type CameraFault, type Facing } from '../lib/selfie'
 
 interface SelfieCameraProps {
   /** She printed it: the picture (a data URL) and her line for the back of the print */
@@ -33,6 +33,8 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
   const [flash, setFlash] = useState(false)
   const [attempt, setAttempt] = useState(0)
   const [fault, setFault] = useState<CameraFault | null>(null)
+  /** The back camera has a lamp the browser can switch on (Android does, iPhones don't let a page) */
+  const [torch, setTorch] = useState(false)
   const [flashing, setFlashing] = useState(false)
   const [busy, setBusy] = useState(false)
   const [shot, setShot] = useState<string | null>(null)
@@ -58,6 +60,7 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
           video.srcObject = opened
           await video.play().catch(() => {})
         }
+        setTorch(hasTorch(opened))
         setFault(null)
       })
       .catch((err: unknown) => {
@@ -80,22 +83,26 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
     setBusy(true)
     try {
       if (flash && mirror) {
-        // The screen is the flash for the front camera
+        // The screen is the flash for the front camera: white for a moment before the picture
         setFlashing(true)
-        await wait(280)
-      } else if (flash) {
-        await setTorch(streamRef.current, true)
+        await wait(420)
+      } else if (flash && torch) {
+        await setLamp(streamRef.current, true)
+        await wait(150)
       }
       audio.sfx('shutter')
       setShot(snapshot(video, { mirror, zoom }))
     } catch {
       /* no picture this time: she can try again */
     } finally {
-      if (flash && !mirror) void setTorch(streamRef.current, false)
+      if (flash && torch) void setLamp(streamRef.current, false)
       setFlashing(false)
       setBusy(false)
     }
   }
+
+  /** The flash button does something on this camera: the screen for the front one, a lamp for the back one */
+  const canFlash = mirror || torch
 
   const switchCamera = () => {
     audio.sfx('tap')
@@ -139,18 +146,20 @@ export function SelfieCamera({ onPrint, onBlank, onClose }: SelfieCameraProps) {
 
         {!shot && !fault && (
           <>
-            <button
-              type="button"
-              className={`${ROUND} absolute top-4 left-4 h-11 w-11 ${flash ? 'bg-white text-ink' : 'bg-white/20'}`}
-              onClick={() => {
-                audio.sfx('tap')
-                setFlash((f) => !f)
-              }}
-              aria-label={flash ? 'Flash on' : 'Flash off'}
-              aria-pressed={flash}
-            >
-              <BoltIcon />
-            </button>
+            {canFlash && (
+              <button
+                type="button"
+                className={`${ROUND} absolute top-4 left-4 h-11 w-11 ${flash ? 'bg-white text-ink' : 'bg-white/20'}`}
+                onClick={() => {
+                  audio.sfx('tap')
+                  setFlash((f) => !f)
+                }}
+                aria-label={flash ? 'Flash on' : 'Flash off'}
+                aria-pressed={flash}
+              >
+                <BoltIcon />
+              </button>
+            )}
             <button type="button" className={`${ROUND} absolute top-4 right-4 h-11 w-11 bg-white/20 font-ui text-[13px] font-bold`} onClick={cycleZoom} aria-label={`Zoom ${zoom}×`}>
               {zoom}×
             </button>
