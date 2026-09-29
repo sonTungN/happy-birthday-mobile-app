@@ -97,8 +97,9 @@ export function Marked({ text, as: Tag = 'p', className, play, delay = 0, onDone
       ref={(el: HTMLElement | null) => {
         boxRef.current = el
       }}
-      // Its own layer, so the highlighter can sit under the ink but over the paper
-      className={`relative isolate ${className ?? ''}`}
+      // Its own layer, so the highlighter can sit under the ink but over the paper. A "\n" in the text starts a new
+      // line: the way to keep a circled phrase (which never breaks) at the start of a line
+      className={`relative isolate whitespace-pre-line ${className ?? ''}`}
     >
       {parts.map((part, i) =>
         part.mark ? (

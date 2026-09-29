@@ -23,7 +23,7 @@ const CHAPTERS = ['lock', 'invite', 'news', 'darkroom', 'candles', 'finale'] as 
 type ChapterId = (typeof CHAPTERS)[number]
 
 /** The classic leader countdown that plays once, when the film starts */
-const INTRO_COUNTDOWN = [5, 4, 3, 2]
+const INTRO_COUNTDOWN = [7, 6, 5, 4, 3, 2]
 
 /** Old or inner names that live inside another chapter (for ?chapter=… while testing) */
 const ALIASES: Record<string, ChapterId> = { gazette: 'news', cake: 'candles', letter: 'candles' }

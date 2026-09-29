@@ -58,7 +58,7 @@ export default function Newspaper() {
     <div className="film-bg absolute inset-0 overflow-hidden">
       {/* The sheet of newsprint (effects.css: .newsprint). While it spins in: no scrolling, no taps */}
       <motion.div
-        className={`newsprint absolute inset-0 origin-[50%_42%] touch-pan-y overscroll-contain px-5 pt-[calc(var(--safe-top)+62px)] pb-[calc(var(--safe-bottom)+64px)] font-news text-news-ink shadow-[0_24px_70px_rgba(0,0,0,0.55)] [-webkit-overflow-scrolling:touch] ${landed ? 'overflow-x-hidden overflow-y-auto' : 'pointer-events-none overflow-hidden'}`}
+        className={`newsprint absolute inset-0 origin-[50%_42%] touch-pan-y overscroll-contain px-5 pt-[calc(var(--safe-top)+86px)] pb-[calc(var(--safe-bottom)+64px)] font-news text-news-ink shadow-[0_24px_70px_rgba(0,0,0,0.55)] [-webkit-overflow-scrolling:touch] ${landed ? 'overflow-x-hidden overflow-y-auto' : 'pointer-events-none overflow-hidden'}`}
         initial={{ scale: 0.04, rotate: -720, opacity: 0 }}
         animate={{ scale: 1, rotate: 0, opacity: 1 }}
         transition={{ delay: SPIN_DELAY, duration: SPIN_TIME, ease: [0.14, 0.78, 0.3, 1], opacity: { delay: SPIN_DELAY, duration: 0.15 } }}

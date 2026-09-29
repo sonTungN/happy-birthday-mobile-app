@@ -87,7 +87,8 @@ export const content: Content = {
     ],
     correction: {
       title: 'Correction',
-      text: 'This edition was delayed by (({ageWords} years)). The editor, aged nine months at the time, apologises.',
+      // "\n" starts a new line, so the circled phrase sits at the start of one instead of dropping mid-sentence
+      text: 'This edition was delayed by\n(({ageWords} years)). The editor, aged nine months at the time, apologises.',
       signature: 'The Editor',
     },
   },
