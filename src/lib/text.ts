@@ -220,6 +220,12 @@ export function plural(n: number, word: string): string {
 }
 
 /** '2004-10-21' → 'Thursday, October 21, 2004' */
+/** 'October 21, 2026': the date line of a newspaper, without the weekday, so it fits beside the edition */
+export function formatEditionDate(iso: string): string {
+  const d = parseDay(iso);
+  return d ? `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}` : iso;
+}
+
 export function formatLongDate(iso: string): string {
   const d = parseDay(iso);
   return d

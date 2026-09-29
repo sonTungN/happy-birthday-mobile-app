@@ -1,7 +1,8 @@
 // Photos are resized to 1080px, converted to WebP and stripped of EXIF data (including GPS location)
-// at build time, so you can drop the original photos from your phone straight into src/assets/photos/.
+// at build time, so you can drop the original photos from your phone straight into src/assets/photos/
+// (or a folder inside it: `photoUrl("darkroom/x.jpg")`). Lowercase extensions only: the pipeline skips the rest.
 const photoModules = import.meta.glob<string>(
-  "../assets/photos/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP}",
+  "../assets/photos/**/*.{jpg,jpeg,png,webp,avif}",
   {
     eager: true,
     import: "default",
@@ -11,6 +12,16 @@ const photoModules = import.meta.glob<string>(
 
 const audioModules = import.meta.glob<string>(
   "../assets/audio/*.{mp3,m4a,aac,wav,ogg,MP3,M4A}",
+  {
+    eager: true,
+    import: "default",
+    query: "?url",
+  },
+);
+
+// Clips are served as they are: an H.264 .mp4 plays everywhere (avconvert --preset Preset960x540 makes one)
+const videoModules = import.meta.glob<string>(
+  "../assets/video/*.{mp4,webm,mov,MP4,MOV}",
   {
     eager: true,
     import: "default",
@@ -43,6 +54,15 @@ export function photoUrl(file: string): string {
   if (url) return url;
   console.warn(`[film roll] Photo not found: src/assets/photos/${file}`);
   return missingPhoto(file);
+}
+
+/** URL of a clip in src/assets/video (or an external link). null if there is none. */
+export function videoUrl(file: string | null): string | null {
+  if (!file) return null;
+  if (isUrl(file)) return file;
+  const url = lookup(videoModules, file);
+  if (!url) console.warn(`[film roll] Clip not found: src/assets/video/${file}`);
+  return url;
 }
 
 /** URL of a file in src/assets/audio (or an external link). null if there is none. */

@@ -39,10 +39,7 @@ export default function Invite({ onDone }: ChapterProps) {
   const [appeals, setAppeals] = useState(0);
   const [accepted, setAccepted] = useState(false);
 
-  const photos = (invite.photos ?? content.photos.map((p) => p.file)).slice(
-    0,
-    3,
-  );
+  const photos = (invite.photos ?? content.photos).slice(0, 3);
   const appealGone = appeals >= invite.rulings.length;
   const ruling =
     appeals > 0
@@ -158,8 +155,8 @@ export default function Invite({ onDone }: ChapterProps) {
 
       {/* Fixed-shape box, centered in the space left under the buttons */}
       <div className="relative my-auto aspect-[1/0.84] w-full max-w-[420px] flex-none">
-        {photos.map((file, i) => {
-          const entry = content.photos.find((p) => p.file === file);
+        {photos.map((entry, i) => {
+          const file = entry.file;
           const layout = PHOTO_LAYOUT[i];
           return (
             <motion.div

@@ -1,4 +1,4 @@
-export type MarkKind = "marker" | "circle";
+export type MarkKind = "marker" | "circle" | "underline" | "bold";
 
 export interface MarkPart {
   text: string;
@@ -6,9 +6,12 @@ export interface MarkPart {
   mark: MarkKind | null;
 }
 
-const MARKS = /==(.+?)==|\(\((.+?)\)\)/g;
+const MARKS = /==(.+?)==|\(\((.+?)\)\)|__(.+?)__|\*\*(.+?)\*\*/g;
 
-/** Splits "It's ==a Girl==" into plain text and marked phrases: ==…== gets the yellow marker, ((…)) a red pen circle. */
+/**
+ * Splits "It's ==a Girl==" into plain text and marked phrases: ==…== gets the yellow marker, ((…)) a red pen
+ * circle, __…__ a red pen underline, and **…** is simply set bolder (for the lesser headlines).
+ */
 export function parseMarks(text: string): MarkPart[] {
   const parts: MarkPart[] = [];
   let last = 0;
@@ -18,7 +21,11 @@ export function parseMarks(text: string): MarkPart[] {
     parts.push(
       m[1] !== undefined
         ? { text: m[1], mark: "marker" }
-        : { text: m[2], mark: "circle" },
+        : m[2] !== undefined
+          ? { text: m[2], mark: "circle" }
+          : m[3] !== undefined
+            ? { text: m[3], mark: "underline" }
+            : { text: m[4], mark: "bold" },
     );
     last = m.index + m[0].length;
   }
@@ -83,6 +90,24 @@ export function markerPath(w: number, h: number, seed: number): string {
     `L${firstTop}`,
     "Z",
   ].join(" ");
+}
+
+/**
+ * A red pen underline along the bottom of a `w` × `h` px line of text: one stroke, a little wavy, drifting
+ * down a touch towards the end the way a quick hand does.
+ */
+export function underlinePath(w: number, h: number, seed: number): string {
+  const rand = random(seed);
+  const y = h * 0.86;
+  const steps = Math.max(2, Math.round(w / 24));
+  const phase = rand() * Math.PI * 2;
+  const drift = (rand() - 0.3) * h * 0.06;
+  const points = Array.from({ length: steps + 1 }, (_, i) => {
+    const x = (w * i) / steps;
+    const wave = Math.sin(x / 26 + phase) * h * 0.02;
+    return `${r1(x)} ${r1(y + wave + (drift * i) / steps + (rand() - 0.5) * h * 0.02)}`;
+  });
+  return `M${points[0]} L${points.slice(1).join(" L")}`;
 }
 
 /**

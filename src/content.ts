@@ -56,21 +56,27 @@ export const content: Content = {
     denied: "DENIED",
     approved: "APPROVED",
     sealRing: "The Office of the Calendar · Est. 2004 ·",
+    // The three prints scattered on the notice, from src/assets/photos/us/ (a `title` would go on the border)
+    photos: [
+      { file: "us/2025-12-13_us.jpg", date: "2025-12-13" },
+      { file: "us/2025-12-22_us.jpg", date: "2025-12-22", focus: "center 20%" },
+      { file: "us/2026-01-28_us_home.jpg", date: "2026-01-28", focus: "center 25%" },
+    ],
   },
 
-  // The front page of the day she was born. ==Words between double equals== get the yellow marker,
+  // A birthday edition: it comes out on her birthday and looks back at the day she was born, then breaks
+  // today's news at the foot of the page. ==Words between double equals== get the yellow marker,
   // ((words in double brackets)) a red pen circle. Real news from that week (checked): the Red Sox won
   // Game 7 on 20 Oct 2004, and the finished human genome was published in Nature on 21 Oct 2004.
   newspaper: {
     masthead: "The Morning Gazette",
-    edition: "Vol. I · No. 1",
+    edition: "Vol. XXII · Birthday issue",
+    archiveLabel: "From the archives · October 2004",
     stories: [
       {
         tag: "Births",
         headline: "It’s ==a Girl==",
-        dek: "{fullName} arrives one day after Women’s Day. ==The family already calls her Mít.==",
-        photo: "gazette.png", // a baby photo. A .png with the background removed gets the cut-out look
-        note: "Mít, day one",
+        dek: "(({AgeWords})) years ago today, {fullName} arrived one day after Women’s Day. ==The family already calls her Mít.==",
         // The lead runs on under the photo. SAMPLE: make it yours
         body: [
           "She arrived on her own schedule and was declared perfect by everyone in the room, a verdict this newspaper sees no reason to question. Witnesses describe a small person with a great deal to say and, as yet, no words to say it with. The name Mít was settled within the hour. The paperwork took longer.",
@@ -79,34 +85,49 @@ export const content: Content = {
       },
       {
         tag: "Civic Affairs",
-        headline: "Men’s Day Petition ==Withdrawn==",
-        dek: "The 21st of October has been claimed, ==permanently, by a baby girl.==",
+        // The archive stories are lesser news: **bold** in the headline, a __pen underline__ in the text
+        headline: "Men’s Day Petition **Withdrawn**",
+        dek: "The 21st of October has been claimed, __permanently, by a baby girl.__",
       },
       {
         tag: "Sport",
-        headline: "==Impossible Comeback== in Boston",
-        dek: "Down three games to none, the Red Sox win four straight. ==Only the second most remarkable event of the week.==",
+        headline: "**Impossible Comeback** in Boston",
+        dek: "Down three games to none, the Red Sox win four straight. __Only the second most remarkable event of the week.__",
       },
       {
         tag: "Science",
-        headline: "==Fewer Genes== Than Thought",
-        dek: "Scientists count only 20,000 to 25,000. ==Plenty, it turns out, to make her.==",
+        headline: "**Fewer Genes** Than Thought",
+        dek: "Scientists count only 20,000 to 25,000. __Plenty, it turns out, to make her.__",
       },
     ],
-    correction: {
-      title: "Correction",
-      // Only the number is circled: one short word moves to the next line whole, so the text stays a block
-      // (put "\n" before a circled phrase if it ever drops mid-sentence and leaves a gap)
-      text: "This edition was delayed by (({ageWords})) years. The editor, aged nine months at the time, apologises.",
-      signature: "The Editor",
+    // Her, growing up, pasted onto the lead one after another (cut-outs from src/assets/photos/news/, see
+    // scripts/cutout.swift). The note is scribbled by the arrow. SAMPLE notes: make them yours
+    growUp: [
+      { file: "news/1.png", note: "Mít, chapter one" },
+      { file: "news/2.png", note: "Mít, chapter two" },
+      { file: "news/3.png", note: "Mít, chapter three" },
+      { file: "news/4.png", note: "Mít, today" },
+    ],
+    // The moving picture at the foot of the page (src/assets/video/tiktok.mp4). Silent until she taps it
+    clip: {
+      file: "tiktok.mp4",
+      tag: "Stop press",
+      headline: "==Dance Footage== Surfaces",
+      dek: "A clip has reached this newsroom. The editor has watched it eleven times, strictly for verification.",
+      // Set beside and under the picture. SAMPLE: make it yours
+      body: [
+        "The footage, believed to have been recorded at home, shows the subject in full command of the choreography. Witnesses report that a second take was not required.",
+        "Asked whether the clip would be released, a spokesman for the family said only: “It just was.”",
+      ],
+      caption: "Tap the picture for sound",
+      captionOn: "Tap again for quiet",
     },
   },
 
   darkroom: {
     // No number anywhere here: how many frames there are, and whose the last one is, stays a surprise
     title: "The year, frame by frame",
-    emptyBoard:
-      "The past year is still in the camera.\nPress the shutter.",
+    emptyBoard: "The past year is still in the camera.\nPress the shutter.",
     arrangeHint: "Drag them where you like",
     outro: "Tap a print to read its back",
     gridHint: "Drag a print by its border to reorder",
@@ -114,11 +135,11 @@ export const content: Content = {
     // After the eight, the camera turns round: the ninth frame is a photo of her, taken right then
     selfie: {
       title: "One more. Your turn.",
-      caption: "Exhibit I: {ageWords}",
+      caption: "Sinh nhật của em",
       place: "Right here",
       // The back of her print carries the line she writes when she prints it; this one is the fallback
       note: "Taken on the day. It came out perfectly, naturally.",
-      blankCaption: "Exhibit I: pending",
+      blankCaption: "Sinh nhật của em",
       blankNote: "This one hasn’t been taken yet. Tonight, then.",
       keep: "Keep this print",
       signature: "Us",
@@ -127,61 +148,72 @@ export const content: Content = {
 
   // 6–8 photos looks best (8 max). SAMPLE captions: replace them with your own.
   photos: [
+    // `focus` is where the square crop looks (CSS object-position): "center 30%" keeps the top of a
+    // portrait photo, "60% center" the right part of a landscape one. Lowercase .jpg only: the build
+    // pipeline (resize, webp, no location data) skips other spellings
     {
-      file: "01.jpg",
-      date: "2025-10-21",
-      title: "Exhibit A: twenty-one",
-      place: "Last birthday",
-      note: "The morning you turned twenty-one. You said you felt no different. The evidence suggests otherwise.",
+      file: "darkroom/2025-12-22_home.jpg",
+      date: "2025-12-22",
+      title: "Chúng mình, ở nhà",
+      place: "Sunrise Block G, 20.09",
+      note: 'Chúng mình. Anh ngồi làm việc, còn em thì "yêu" anh. Anh thích lắm.',
+      focus: "center 40%",
     },
     {
-      file: "02.jpg",
-      date: "2025-12-24",
-      title: "Exhibit B: the cold",
-      place: "Somewhere cold",
-      note: "Four layers, two scarves and one complaint per minute. Still the best-dressed person in the frame.",
+      file: "darkroom/2026-01-20_birthday_presents.jpg",
+      date: "2026-01-20",
+      title: "Quà sinh nhật",
+      place: "Sunrise Block G, 20.09",
+      note: "Sinh nhật anh, một mình. Rồi hoa và quà em gửi từ Đài Loan tới. Ấm áp và yêu em nhiều lắm <3",
+      focus: "center 60%",
     },
     {
-      file: "03.jpg",
-      date: "2026-02-17",
-      title: "Exhibit C: Tết",
-      place: "Home",
-      note: "Lì xì counted twice, for accuracy.",
+      file: "darkroom/2026-01-24_first_date_dinner.jpg",
+      date: "2026-01-24",
+      title: "Bữa tối hẹn hò đầu tiên",
+      place: "Hoshiyo Dining Lounge",
+      note: "Buổi date đầu tiên của tụi mình, và cũng là tình đầu của anh. Ngại lắm, nhưng mà thành công rồi!",
+      focus: "center 30%",
     },
     {
-      file: "04.jpg",
-      date: "2026-05-01",
-      title: "Exhibit D: off duty",
-      place: "Somewhere with a view",
-      note: "A rare record of you doing absolutely nothing, and doing it beautifully.",
+      file: "darkroom/2026-01-24_dinner_flower.jpg",
+      date: "2026-01-24",
+      title: "Bó hoa đầu tiên cho em",
+      place: "Hoshiyo Dining Lounge",
+      note: "Bó hoa đầu tiên anh tặng em, gửi gắm nhiều lắm. Anh rất vui vì em đã thích nó thật nhiều.",
+      focus: "center 35%",
     },
     {
-      file: "05.jpg",
+      file: "darkroom/2026-02-01_HCM_Photobooth.jpg",
+      date: "2026-02-01",
+      title: "Photobooth đầu tiên của anh",
+      place: "Photobooth HCM",
+      note: "Lần đầu anh đi photobooth, mà là với em. Em hôn má anh. Em xinh lắm!",
+      focus: "center 25%",
+    },
+    {
+      file: "darkroom/2026-02-01_matcha_drawing.jpg",
+      date: "2026-02-01",
+      title: 'Buổi đi "chơi" đầu tiên của anh',
+      place: "Sundate Matcha",
+      note: "Vẽ lên ly matcha. Anh vẽ hai đứa mình, em vẽ hoa với mây. Em cười nhiều lắm.",
+      focus: "center 45%",
+    },
+    {
+      file: "darkroom/2026-02-15_Hanoi_Photobooth.jpg",
+      date: "2026-02-15",
+      title: "Ra Hà Nội cùng em",
+      place: "Photobooth Hà Nội",
+      note: "Ra Hà Nội chơi với em. Tấm photobooth anh thích nhất từ trước tới giờ <3",
+      focus: "55% center",
+    },
+    {
+      file: "darkroom/2026-07-12_date_gom.jpg",
       date: "2026-07-12",
-      title: "Exhibit E: mid-story",
-      place: "Dinner",
-      note: "Caught halfway through a very long story. The photographer has no regrets.",
-    },
-    {
-      file: "06.jpg",
-      date: "2026-08-22",
-      title: "Exhibit F: the long way round",
-      place: "The fair",
-      note: "You wanted the view from the top. You got it, and two more laps besides.",
-    },
-    {
-      file: "07.jpg",
-      date: "2026-09-14",
-      title: "Exhibit G: the downpour",
-      place: "Under an awning",
-      note: "No umbrella, and still the most composed person on the street.",
-    },
-    {
-      file: "08.jpg",
-      date: "2026-10-20",
-      title: "Exhibit H: the eve",
-      place: "Women’s Day",
-      note: "Flowers for the whole country today. Tomorrow is yours alone.",
+      title: "Đi làm gốm cùng em",
+      place: "Gốm Sài Gòn",
+      note: "Lần đầu anh làm gốm, và là với em. Có được một cái cốc và một cái đĩa ăn cho Tít.",
+      focus: "50% center",
     },
   ],
 

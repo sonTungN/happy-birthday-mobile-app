@@ -451,14 +451,40 @@
     pointer-events: none;
   }
 
-  /* A cut-out: black and white, a red outline slightly off register, a soft shadow on the paper */
+  /* A cut-out: black and white, a red pen outline down the side the arrow comes from (the shadows are all
+     cast leftwards, so only the left edges show it), a soft shadow on the paper */
   .news-cutout img {
-    filter: grayscale(1) contrast(1.1) drop-shadow(2px 0 0 var(--color-pen))
-      drop-shadow(-2px 0 0 var(--color-pen))
-      drop-shadow(0 2px 0 var(--color-pen))
-      drop-shadow(0 -2px 0 var(--color-pen))
-      drop-shadow(1.5px 2px 0 var(--color-pen))
+    filter: grayscale(1) contrast(1.1) drop-shadow(-2.5px 0 0 var(--color-pen))
+      drop-shadow(-2px 1.5px 0 var(--color-pen))
+      drop-shadow(-2px -1.5px 0 var(--color-pen))
       drop-shadow(0 8px 10px rgba(0, 0, 0, 0.22));
+  }
+
+  /* The moving picture: a clip in a printed frame, in halftone like a press photo */
+  .news-moving {
+    position: relative;
+    background: rgba(246, 243, 236, 0.65);
+    box-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.15),
+      0 6px 14px rgba(0, 0, 0, 0.2);
+  }
+
+  .news-moving video {
+    filter: grayscale(1) contrast(1.15) brightness(1.02);
+  }
+
+  .news-moving::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    background: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 0.28) 0.55px,
+        transparent 0.95px
+      )
+      0 0 / 3px 3px;
+    mix-blend-mode: multiply;
+    pointer-events: none;
   }
 
   /* A press photo: printed in halftone */

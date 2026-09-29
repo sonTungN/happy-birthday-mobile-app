@@ -27,14 +27,6 @@ export interface NewsStory {
   headline: string;
   /** One or two sentences under the headline. The marks work here too */
   dek: string;
-  /**
-   * A photo in src/assets/photos. A .png with the background removed is pasted on as a cut-out with a red
-   * outline (iPhone: touch and hold the person in Photos, then Share); a .jpg is printed as a press photo.
-   * Only the first story shows its photo.
-   */
-  photo?: string | null;
-  /** Scribbled in red pen next to the arrow that points at the photo */
-  note?: string;
   /** The story itself, a paragraph per entry, after the dek (after the photo, for the lead). The marks work here too */
   body?: string[];
 }
@@ -100,18 +92,38 @@ export interface Content {
     /** The round seal stamped on the notice when she accepts: the word in the middle and the text around the ring */
     approved: string;
     sealRing: string;
-    /** 3 photos for the invite screen. Leave out to use the first 3 of `photos` */
-    photos?: string[];
+    /** The 3 prints scattered on the notice (a file in src/assets/photos, e.g. 'us/x.jpg'). Leave out to use the first 3 of `photos` */
+    photos?: { file: string; date?: string; title?: string; focus?: string }[];
   };
   newspaper: {
     /** The paper's name, set in blackletter across the top of the page */
     masthead: string;
-    /** Left of the date line under the masthead (the date itself comes from `birthday`) */
+    /** Left of the date line under the masthead (the date is her birthday, this year) */
     edition: string;
-    /** The first story leads the page with the photo, the next two share a row, any others run full width */
+    /** A small kicker over the stories from the week she was born, e.g. 'From the archives · October 2004' */
+    archiveLabel?: string;
+    /** The first story leads the page with her photos, the next two share a row, any others run full width */
     stories: NewsStory[];
-    /** The boxed note at the foot of the page. Marks work in `text` */
-    correction: { title: string; text: string; signature: string };
+    /**
+     * Her, growing up: photos in src/assets/photos pasted onto the lead one after another, each with a note
+     * scribbled by the arrow. A .png with the background removed gets the cut-out look with a red outline
+     * (`swift scripts/cutout.swift IN.jpg OUT.png` makes one); a .jpg is printed as a press photo.
+     */
+    growUp: { file: string; note?: string }[];
+    /** The moving picture at the foot of the page: a clip in src/assets/video, silent until she taps it */
+    clip?: {
+      file: string;
+      tag: string;
+      headline: string;
+      dek: string;
+      /** Paragraphs set beside and under the picture */
+      body?: string[];
+      /** Under the picture while it is silent, and once the sound is on */
+      caption: string;
+      captionOn: string;
+    };
+    /** A boxed note at the foot of the page, if you want one. Marks work in `text` */
+    correction?: { title: string; text: string; signature: string };
   };
   darkroom: {
     title: string;

@@ -21,6 +21,12 @@ interface PolaroidProps {
 }
 
 /**
+ * The writing on the border: the same size on every print, on one line or two (never off the edge). The border
+ * is 21% of the width; two lines of 7.5cqw come to 16.5, so they sit inside it with room to spare.
+ */
+const CAPTION = "line-clamp-2 text-[7.5cqw] leading-[1.1] text-balance";
+
+/**
  * An instant photo. Its width must be set by the parent: every size inside scales with it (cqw = % of the card's width).
  * The paper and the vignette are drawn in effects.css (.polaroid-card, .polaroid-photo).
  */
@@ -71,8 +77,8 @@ export function Polaroid({
         {children}
       </motion.div>
       {caption && (
-        <p className="absolute right-[6%] bottom-0 left-[6%] grid h-[21%] place-items-center overflow-hidden text-center font-body text-[9cqw] leading-[1.05] whitespace-nowrap text-ellipsis text-[#2a2a2a] italic">
-          {caption}
+        <p className="absolute right-[6%] bottom-0 left-[6%] grid h-[21%] place-items-center overflow-hidden text-center font-body text-[#2a2a2a] italic">
+          <span className={`max-w-full ${CAPTION}`}>{caption}</span>
         </p>
       )}
       {extras}
