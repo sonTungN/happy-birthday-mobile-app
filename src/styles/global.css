@@ -1,0 +1,234 @@
+/*
+ * Styling works like this:
+ * - Components are styled with Tailwind classes, right on the element (className="…").
+ * - This file holds the design tokens (@theme). Each one becomes a class, e.g. --color-paper gives
+ *   bg-paper / text-paper / border-paper, --font-news gives font-news. Change a token here and every
+ *   element that uses it follows.
+ * - Tailwind's own reset ("preflight") is not used: the site keeps its reset below, so nothing shifts.
+ * - Drawn things that would be unreadable as a line of classes (the camera, the cake, film grain…)
+ *   live in effects.css.
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import './fonts.css';
+@import './effects.css';
+
+@theme static {
+  /* Black-and-white film: charcoal, silver and aged paper */
+  --color-*: initial;
+  --color-black: #000;
+  --color-ink: #121212;
+  --color-charcoal: #1c1c1c;
+  --color-graphite: #2c2c2c;
+  --color-smoke: #4b4a48;
+  --color-ash: #8d8a84;
+  --color-silver: #c8c5bd;
+  --color-bone: #e8e3d8;
+  --color-paper: #f2eee5;
+  /* A warm white: the whitest thing on the site */
+  --color-white: #f8f6f0;
+  /* The newspaper: its ink, the editor's yellow highlighter and red pen */
+  --color-news-ink: #1b1a17;
+  --color-marker: #f0db3a;
+  --color-pen: #b3342b;
+
+  --font-*: initial;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-ui: 'Josefin Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --font-body: 'EB Garamond', Georgia, serif;
+  --font-script: 'Pinyon Script', 'EB Garamond', cursive;
+  --font-seg: 'DSEG7', ui-monospace, monospace;
+  --font-news: 'Newsreader', Georgia, serif;
+  --font-masthead: 'Chomsky', 'Old English Text MT', 'Newsreader', serif;
+  --font-hand: 'Caveat', 'Bradley Hand', cursive;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  /* transition-* classes ease like plain CSS transitions */
+  --default-transition-timing-function: ease;
+}
+
+/* On a laptop the site sits in a phone-sized frame: `desk:` styles apply there */
+@custom-variant desk (@media (min-width: 640px) and (min-height: 640px));
+/* Short phones (iPhone SE, mini): `short:` styles apply there */
+@custom-variant short (@media (max-height: 720px));
+
+@layer base {
+  :root {
+    /* Every photo is shown as a black-and-white print. Use `none` for color photos. */
+    --photo-filter: grayscale(1) contrast(1.08) brightness(1.03);
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    /*
+     * The one piece of Tailwind's reset kept here: no border, and solid once a side gets a width.
+     * Tailwind's border classes rely on it: without it, `border-t border-dashed` also draws a
+     * 3px dashed border on the other three sides.
+     */
+    border: 0 solid;
+  }
+
+  html,
+  body,
+  #root {
+    margin: 0;
+    height: 100%;
+  }
+
+  body {
+    background: radial-gradient(1100px 800px at 50% 30%, #3a3937 0%, #1b1b1b 50%, #0b0b0b 100%) fixed;
+    color: var(--color-white);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /*
+   * The text colour and font are set on the app's own root too, not only on <body>: a page that embeds this
+   * one (a preview host) may style <body> itself, and text would then inherit its colour instead of ours.
+   */
+  #root {
+    color: var(--color-white);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  img {
+    display: block;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+
+  /*
+   * No visible scrollbars anywhere. iPhone hides them on its own, but desktop browsers (a mouse plugged in,
+   * or macOS "Show scroll bars: Always") draw a grey bar inside the phone frame. Scrolling still works.
+   */
+  * {
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Shared pieces used on several screens. A Tailwind class on the same element overrides them. */
+@layer components {
+  /* The projected-film background: lighter in the middle, burnt-out edges */
+  .film-bg {
+    background-color: #242424;
+    background-image: radial-gradient(ellipse 90% 70% at 50% 42%, #5f5e5b 0%, #353432 48%, #141414 100%);
+  }
+
+  /* Old cinema buttons: squared off, spaced capitals, a printed drop shadow */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 50px;
+    padding: 14px 24px 11px;
+    border: 1.5px solid var(--color-white);
+    border-radius: 4px;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+    transition:
+      transform 0.12s var(--ease-out),
+      box-shadow 0.12s var(--ease-out);
+  }
+
+  .btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.55);
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+  }
+
+  .btn-dark {
+    background: var(--color-ink);
+    color: var(--color-white);
+  }
+
+  .btn-light {
+    background: var(--color-bone);
+    color: var(--color-ink);
+    border-color: var(--color-bone);
+  }
+
+  .btn-outline {
+    background: rgba(18, 18, 18, 0.35);
+    color: var(--color-white);
+  }
+
+  .btn-ghost {
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 0;
+    background: none;
+    color: rgba(248, 246, 240, 0.8);
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 17px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Small caption plate for instructions */
+  .hint {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid rgba(248, 246, 240, 0.28);
+    border-radius: 3px;
+    background: rgba(10, 10, 10, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.3;
+    text-align: center;
+  }
+}

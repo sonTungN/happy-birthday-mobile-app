@@ -1,0 +1,869 @@
+/*
+ * Drawn things that read better as plain CSS than as a long line of classes: textures, the film effects,
+ * the camera, the cake… Everything else is styled with Tailwind classes right in the components.
+ * One section per component, titled with the file that uses it; the animations are at the end.
+ */
+@layer components {
+  /* ---- Polaroid: the print's paper and vignette, the masking tape ---- */
+
+  .polaroid-card {
+    background: linear-gradient(165deg, #faf8f2 0%, var(--color-bone) 60%, #d8d2c5 100%);
+    box-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.25),
+      0 14px 28px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Soft inner vignette, like a real print */
+  .polaroid-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.12),
+      inset 0 0 30px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Torn ends */
+  .tape {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    clip-path: polygon(0 8%, 3% 0, 6% 10%, 9% 0, 91% 0, 94% 10%, 97% 0, 100% 8%, 100% 92%, 97% 100%, 94% 90%, 91% 100%, 9% 100%, 6% 90%, 3% 100%, 0 92%);
+  }
+
+  .tape-paper {
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.25), transparent 30%, rgba(255, 255, 255, 0.2) 70%, transparent),
+      rgba(226, 219, 203, 0.82);
+  }
+
+  .tape-smoke {
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 40%),
+      rgba(70, 69, 66, 0.75);
+  }
+
+  /* ---- Leader: the countdown at the head of a reel ---- */
+
+  .leader-screen {
+    background: radial-gradient(ellipse 78% 58% at 50% 50%, #cfccc6 0%, #a7a49e 38%, #585754 76%, #171717 100%);
+  }
+
+  /* The hand sweeping round the dial, darkening what it has passed */
+  .leader-sweep {
+    background: conic-gradient(from 0deg at 50% 50%, rgba(20, 20, 20, 0.2) 0deg var(--sweep), rgba(255, 255, 255, 0.05) var(--sweep) 360deg);
+    animation: leader-sweep 0.8s linear forwards;
+  }
+
+  /* ---- EnvelopeArt: paper, the lined letter, black wax ---- */
+
+  .envelope-back {
+    background: linear-gradient(180deg, #a9a296, #bdb6a9);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.55);
+  }
+
+  .envelope-letter {
+    background:
+      repeating-linear-gradient(transparent 0 14px, rgba(60, 60, 60, 0.18) 14px 15px) 0 18px / 100% calc(100% - 30px) no-repeat,
+      var(--color-paper);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  /* A ring pulsing out of the seal while it waits to be tapped */
+  .envelope-pulse::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    animation: envelope-ring 1.8s ease-out infinite;
+  }
+
+  .envelope-wax {
+    border-radius: 48% 52% 50% 50% / 50% 47% 53% 50%;
+    background: radial-gradient(circle at 35% 30%, #5b5b5b, #1b1b1b 58%, #080808);
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.5),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+      inset 0 3px 5px rgba(255, 255, 255, 0.18);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.6),
+      0 -1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* The pressed rim */
+  .envelope-wax::before {
+    content: '';
+    position: absolute;
+    inset: 11%;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+  }
+
+  /* ---- Candle: the flame (bends with --blow, leans with --lean), its glow and the smoke ---- */
+
+  .candle-glow {
+    background: radial-gradient(circle, rgba(255, 244, 222, 0.42) 0%, rgba(255, 236, 205, 0.12) 40%, rgba(255, 230, 200, 0) 70%);
+    scale: calc(1 - var(--blow, 0) * 0.5);
+    animation: candle-breathe 2.4s ease-in-out infinite alternate;
+    animation-delay: calc(var(--seed, 0) * -0.7s);
+  }
+
+  .candle-bend {
+    transform-origin: 50% 94%;
+    rotate: calc(var(--blow, 0) * var(--lean, 1) * 58deg);
+    scale: calc(1 + var(--blow, 0) * 0.12) calc(1 - var(--blow, 0) * 0.5);
+    transition:
+      rotate 0.09s linear,
+      scale 0.09s linear;
+  }
+
+  /* A pale, almost colorless flame, like on old film stock */
+  .candle-fire {
+    border-radius: 50% 50% 45% 45% / 62% 62% 38% 38%;
+    background: radial-gradient(ellipse 60% 70% at 50% 72%, #ffffff 0%, #fff8e8 30%, #f3e2c0 55%, rgba(230, 205, 160, 0.8) 76%, rgba(220, 190, 140, 0) 100%);
+    transform-origin: 50% 90%;
+    animation: candle-flicker 0.16s ease-in-out infinite alternate;
+    animation-delay: calc(var(--lean, 1) * -0.11s);
+  }
+
+  .candle-core {
+    background: radial-gradient(ellipse at 50% 60%, rgba(40, 40, 40, 0.55), rgba(40, 40, 40, 0) 70%);
+  }
+
+  .candle-smoke span {
+    position: absolute;
+    left: -8px;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(230, 230, 230, 0.6), rgba(230, 230, 230, 0) 70%);
+    opacity: 0;
+    animation: candle-smoke 2.2s ease-out forwards;
+  }
+
+  .candle-smoke span:nth-child(2) {
+    left: -6px;
+    animation-delay: 0.22s;
+  }
+
+  .candle-smoke span:nth-child(3) {
+    left: -10px;
+    animation-delay: 0.45s;
+  }
+
+  /* ---- FilmAdvance: the strip of film and its sprocket holes ---- */
+
+  .film-strip {
+    background: #1c1a17;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+  }
+
+  /* Sprocket holes, top and bottom: four per frame */
+  .film-track::before,
+  .film-track::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, transparent 0 2.75px, rgba(236, 232, 222, 0.78) 2.75px 6.75px, transparent 6.75px 9.5px);
+  }
+
+  .film-track::before {
+    top: 4px;
+  }
+
+  .film-track::after {
+    bottom: 4px;
+  }
+
+  /* ---- Invite: the title card and the court's ruling slip ---- */
+
+  .invite-card {
+    box-shadow:
+      inset 0 0 0 4px rgba(8, 8, 8, 0.72),
+      inset 0 0 0 5px rgba(248, 246, 240, 0.5),
+      0 18px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  /* A star in each top corner */
+  .invite-card::before,
+  .invite-card::after {
+    content: '✦';
+    position: absolute;
+    top: 8px;
+    font-size: 11px;
+    color: rgba(248, 246, 240, 0.7);
+  }
+
+  .invite-card::before {
+    left: 11px;
+  }
+
+  .invite-card::after {
+    right: 11px;
+  }
+
+  .invite-ruling {
+    background: radial-gradient(ellipse at 50% 30%, #f6f2e9, #ddd6c8 100%);
+    box-shadow:
+      inset 0 0 0 4px transparent,
+      inset 0 0 0 5px rgba(18, 18, 18, 0.35),
+      6px 8px 0 rgba(0, 0, 0, 0.45);
+  }
+
+  /* ---- Invitation: the big ticket, notched on both sides at the tear-off line ---- */
+
+  .invitation-ticket {
+    background: radial-gradient(ellipse at 50% 30%, #f6f2e9, #ddd6c8 100%);
+    box-shadow:
+      inset 0 0 0 6px transparent,
+      inset 0 0 0 7px rgba(18, 18, 18, 0.5),
+      6px 8px 0 rgba(0, 0, 0, 0.5);
+    /* --notch: the tear-off line's offset, measured in Invitation.tsx */
+    -webkit-mask:
+      radial-gradient(circle at left var(--notch, 71%), transparent 11px, #000 11.5px) left / 51% 100% no-repeat,
+      radial-gradient(circle at right var(--notch, 71%), transparent 11px, #000 11.5px) right / 51% 100% no-repeat;
+    mask:
+      radial-gradient(circle at left var(--notch, 71%), transparent 11px, #000 11.5px) left / 51% 100% no-repeat,
+      radial-gradient(circle at right var(--notch, 71%), transparent 11px, #000 11.5px) right / 51% 100% no-repeat;
+  }
+
+  /* ---- Letter: aged writing paper with foxed edges and faint rules ---- */
+
+  .letter-paper {
+    background:
+      repeating-linear-gradient(transparent 0 33px, rgba(60, 60, 60, 0.13) 33px 34px) 0 70px / 100% calc(100% - 90px) no-repeat,
+      radial-gradient(ellipse at 50% 40%, #f6f2e9 40%, #e6e0d3 100%);
+    box-shadow:
+      inset 0 0 60px rgba(120, 105, 80, 0.18),
+      0 24px 50px rgba(0, 0, 0, 0.55);
+  }
+
+  /* ---- CakeCut: the arrow at the end of the cutting guide, the glow behind the envelope ---- */
+
+  .cake-guide::after {
+    content: '';
+    position: absolute;
+    left: -8px;
+    bottom: -2px;
+    border: 7px solid transparent;
+    border-top: 11px solid rgba(248, 246, 240, 0.8);
+  }
+
+  .cake-glow {
+    background: radial-gradient(circle, rgba(255, 252, 245, 0.5) 0%, rgba(255, 250, 240, 0.15) 40%, transparent 68%);
+    animation: cake-glow 2.4s ease-in-out infinite alternate;
+  }
+
+  /* ---- App: the screen (a phone-sized frame on a laptop) and the film grain ---- */
+
+  .app-stage {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: #0b0b0b;
+    isolation: isolate;
+  }
+
+  @media (min-width: 640px) and (min-height: 640px) {
+    .app-stage {
+      --safe-top: 18px;
+      --safe-bottom: 16px;
+      inset: auto;
+      left: 50%;
+      top: 50%;
+      width: 402px;
+      height: min(874px, calc(100dvh - 48px));
+      translate: -50% -50%;
+      border-radius: 52px;
+      box-shadow:
+        0 0 0 10px #0d0d0d,
+        0 0 0 12px #3a3a3a,
+        0 40px 120px rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  .fx-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 -.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: fx-grain 0.9s steps(6) infinite;
+  }
+
+  /* ---- Newspaper: the newsprint, the thin rule under the date line, the fold, the photos ---- */
+
+  /* Light crumpled newsprint with a faint dot grid; it scrolls with the page */
+  .newsprint {
+    background-color: #dfddd7;
+    background-image:
+      radial-gradient(circle, rgba(27, 26, 23, 0.2) 0.8px, transparent 1.2px),
+      url('../assets/textures/newsprint.webp');
+    background-size:
+      18px 18px,
+      900px 900px;
+    background-attachment: local;
+  }
+
+  .news-dateline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    height: 1px;
+    background: var(--color-news-ink);
+  }
+
+  /* Where the paper was folded in half: a soft crease right across the sheet */
+  .news-fold::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    right: -20px;
+    top: -14px;
+    height: 12px;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.05) 45%, rgba(255, 255, 255, 0.45) 55%, rgba(0, 0, 0, 0.03) 70%, transparent);
+    pointer-events: none;
+  }
+
+  /* A cut-out: black and white, a red outline slightly off register, a soft shadow on the paper */
+  .news-cutout img {
+    filter: grayscale(1) contrast(1.1) drop-shadow(2px 0 0 var(--color-pen)) drop-shadow(-2px 0 0 var(--color-pen)) drop-shadow(0 2px 0 var(--color-pen))
+      drop-shadow(0 -2px 0 var(--color-pen)) drop-shadow(1.5px 2px 0 var(--color-pen)) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.22));
+  }
+
+  /* A press photo: printed in halftone */
+  .news-press img {
+    filter: grayscale(1) contrast(1.15) brightness(1.02);
+  }
+
+  .news-press::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.28) 0.55px, transparent 0.95px) 0 0 / 3px 3px;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+
+  /* ---- Candles: the match box, the match, the sparks ---- */
+
+  .match-box {
+    box-shadow:
+      inset 0 0 0 4px var(--color-bone),
+      inset 0 0 0 5px #1c1c1c,
+      0 10px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .match-striker {
+    background:
+      radial-gradient(circle, rgba(255, 255, 255, 0.18) 1px, transparent 1.5px) 0 0 / 5px 5px,
+      #3a3836;
+  }
+
+  .match-stick {
+    background: linear-gradient(90deg, #b9b3a6, #e9e4d8 50%, #a39d90);
+  }
+
+  .match-head {
+    border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+    background: radial-gradient(circle at 40% 35%, #5a5a5a, #111 70%);
+  }
+
+  .match-spark {
+    animation: match-spark 0.42s ease-out forwards;
+  }
+
+  .match-spark:nth-child(odd) {
+    --dx: -14px;
+  }
+
+  /* ---- Finale: the scratch tickets ---- */
+
+  /* Notches on both sides (the foil gets the same shape) */
+  .ticket-notches {
+    -webkit-mask:
+      radial-gradient(circle at left 62%, transparent 9px, #000 9.5px) left / 51% 100% no-repeat,
+      radial-gradient(circle at right 62%, transparent 9px, #000 9.5px) right / 51% 100% no-repeat;
+    mask:
+      radial-gradient(circle at left 62%, transparent 9px, #000 9.5px) left / 51% 100% no-repeat,
+      radial-gradient(circle at right 62%, transparent 9px, #000 9.5px) right / 51% 100% no-repeat;
+  }
+
+  .ticket-paper {
+    background: radial-gradient(ellipse at 50% 30%, #f6f2e9, #ddd6c8 100%);
+    box-shadow:
+      inset 0 0 0 5px transparent,
+      inset 0 0 0 6px rgba(18, 18, 18, 0.55);
+  }
+
+  /* The feature ticket: the invitation to the real plan, printed in reverse (bone on black) */
+  .ticket-feature {
+    background: radial-gradient(ellipse at 50% 30%, #2c2a27, #0e0e0d 100%);
+    box-shadow:
+      inset 0 0 0 5px transparent,
+      inset 0 0 0 6px rgba(232, 227, 216, 0.6);
+  }
+
+  /* ---- Darkroom: the instant camera (seen from the back), the developing print, the back of a print ---- */
+
+  .camera-shutter {
+    border-radius: 8px 8px 2px 2px;
+    background: linear-gradient(180deg, #ffffff, #c9c7c1 55%, #8f8d88);
+    box-shadow:
+      inset 0 -2px 0 rgba(0, 0, 0, 0.25),
+      0 -1px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .camera-body {
+    background:
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 1.5px) 0 0 / 4px 4px,
+      linear-gradient(180deg, #2d2d2d 0%, #1b1b1b 60%, #111 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 18px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Chrome top plate */
+  .camera-body::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30%;
+    background: linear-gradient(180deg, #f1f0ec 0%, #c7c5bf 45%, #8f8d88 100%);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  .camera-eyepiece {
+    background: radial-gradient(circle at 50% 30%, #2b2b2b, #0c0c0c 70%);
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Glass sheen over the viewfinder */
+  .camera-finder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), transparent 45%);
+  }
+
+  .camera-door {
+    background:
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 1.5px) 0 0 / 4px 4px,
+      linear-gradient(180deg, #262626, #161616);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+      inset 0 2px 0 rgba(255, 255, 255, 0.05),
+      0 1px 0 rgba(0, 0, 0, 0.6);
+  }
+
+  /* The front of the camera, once it has turned round to take her picture */
+
+  /* The lens: dark glass, rings of the barrel, a chrome rim */
+  .camera-lens {
+    background:
+      radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.35), transparent 22%),
+      radial-gradient(circle at 50% 50%, #0a0a0a 0%, #050505 46%, #2a2a2a 50%, #101010 56%, #3b3b3b 62%, #151515 66%, #6d6b66 70%, #d7d5cf 75%, #8f8d88 100%);
+    box-shadow:
+      0 6px 14px rgba(0, 0, 0, 0.6),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  /* The little selfie mirror beside the lens, like on an Instax: her own face, live, while she frames the shot */
+  .camera-mirror {
+    background: radial-gradient(circle at 50% 40%, #3a3a38, #141414 75%);
+    box-shadow:
+      0 3px 8px rgba(0, 0, 0, 0.6),
+      inset 0 0 0 2px #c9c7c1,
+      inset 0 0 0 3px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Glass sheen over the mirror */
+  .camera-mirror::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.35), transparent 48%);
+    pointer-events: none;
+  }
+
+  /* The flash: a frosted, ridged window on the chrome plate */
+  .camera-flash {
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0 2px, transparent 2px 5px),
+      linear-gradient(180deg, #e9e6df, #b9b6ae);
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: box-shadow 0.15s ease;
+  }
+
+  /* It fires */
+  .camera-flash-lit {
+    background: #ffffff;
+    box-shadow:
+      0 0 24px 8px rgba(255, 255, 255, 0.9),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+
+  /* A glint sweeping across the print once it's developed */
+  .dev-shine {
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 45%, transparent 60%) 120% 0 / 250% 100% no-repeat;
+    animation: dev-shine 0.9s ease-out forwards;
+  }
+
+  /* The back of an old print: aged paper, faint rules */
+  .photo-back {
+    background:
+      repeating-linear-gradient(transparent 0 31px, rgba(60, 60, 60, 0.16) 31px 32px) 0 76px / 100% 100% no-repeat,
+      radial-gradient(ellipse at 30% 20%, #f6f2e8, #e2dccf 90%);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ==== Animations ==== */
+
+/* Leader */
+@property --sweep {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes leader-sweep {
+  to {
+    --sweep: 360deg;
+  }
+}
+
+/* A projector never holds the frame perfectly still */
+@keyframes leader-jitter {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(1px, -1px);
+  }
+  50% {
+    transform: translate(-1px, 1px);
+  }
+  75% {
+    transform: translate(0, -1px);
+  }
+  100% {
+    transform: translate(1px, 0);
+  }
+}
+
+/* EnvelopeArt */
+@keyframes envelope-ring {
+  from {
+    box-shadow: 0 0 0 0 rgba(248, 246, 240, 0.6);
+  }
+  to {
+    box-shadow: 0 0 0 18px rgba(248, 246, 240, 0);
+  }
+}
+
+/* Candle */
+@keyframes candle-flicker {
+  0% {
+    transform: scale(1, 1) skewX(0deg);
+  }
+  40% {
+    transform: scale(0.95, 1.05) skewX(2deg);
+  }
+  100% {
+    transform: scale(1.04, 0.96) skewX(-2deg);
+  }
+}
+
+@keyframes candle-breathe {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes candle-smoke {
+  0% {
+    opacity: 0.9;
+    transform: translate(0, 0) scale(0.6);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translate(10px, -42px) scale(1.7);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-6px, -95px) scale(2.8);
+  }
+}
+
+/* FilmAdvance: the gate glows while winding on is possible */
+@keyframes film-gate {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.35);
+  }
+}
+
+/* Invite: the photos bob gently */
+@keyframes invite-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* CakeCut */
+@keyframes cake-guide {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes cake-hover {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes cake-glow {
+  from {
+    opacity: 0.7;
+    scale: 0.95;
+  }
+  to {
+    opacity: 1;
+    scale: 1.05;
+  }
+}
+
+/* App: the old-film effects over everything */
+@keyframes fx-grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  17% {
+    transform: translate(-22px, 14px);
+  }
+  33% {
+    transform: translate(18px, -30px);
+  }
+  50% {
+    transform: translate(-12px, 26px);
+  }
+  67% {
+    transform: translate(28px, 8px);
+  }
+  83% {
+    transform: translate(-30px, -16px);
+  }
+}
+
+@keyframes fx-flicker {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  3% {
+    opacity: 0.035;
+  }
+  5% {
+    opacity: 0;
+  }
+  41% {
+    opacity: 0.025;
+  }
+  43% {
+    opacity: 0;
+  }
+  77% {
+    opacity: 0.04;
+  }
+  79% {
+    opacity: 0;
+  }
+}
+
+@keyframes fx-scratch {
+  0%,
+  100% {
+    opacity: 0;
+    left: 30%;
+  }
+  12% {
+    opacity: 0.8;
+    left: 71%;
+  }
+  16% {
+    opacity: 0;
+  }
+  48% {
+    opacity: 0.6;
+    left: 22%;
+  }
+  51% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0.7;
+    left: 58%;
+  }
+  84% {
+    opacity: 0;
+  }
+}
+
+@keyframes fx-dust {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.85;
+    left: 20%;
+    top: 30%;
+  }
+  14% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.7;
+    left: 70%;
+    top: 62%;
+    width: 2px;
+    height: 4px;
+  }
+  48% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0.9;
+    left: 40%;
+    top: 82%;
+  }
+  78% {
+    opacity: 0;
+  }
+}
+
+/* Candles */
+@keyframes match-spark {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--dx, 12px), -20px) scale(0.3);
+  }
+}
+
+@keyframes mic-ping {
+  from {
+    box-shadow: 0 0 0 0 rgba(18, 18, 18, 0.6);
+  }
+  to {
+    box-shadow: 0 0 0 10px rgba(18, 18, 18, 0);
+  }
+}
+
+@keyframes blow-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+/* Finale */
+@keyframes ticket-beckon {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes credits-roll {
+  from {
+    transform: translateY(var(--from));
+  }
+  to {
+    transform: translateY(var(--to));
+  }
+}
+
+/* Darkroom */
+@keyframes camera-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 -2px 0 rgba(0, 0, 0, 0.25),
+      0 0 0 0 rgba(248, 246, 240, 0.6);
+  }
+  50% {
+    box-shadow:
+      inset 0 -2px 0 rgba(0, 0, 0, 0.25),
+      0 0 0 9px rgba(248, 246, 240, 0);
+  }
+}
+
+@keyframes dev-shine {
+  to {
+    background-position: -40% 0;
+  }
+}
+
+@keyframes dev-rub {
+  0%,
+  100% {
+    transform: translate(-130%, 0);
+  }
+  50% {
+    transform: translate(30%, -6px);
+  }
+}
+
+/* The self-timer lamp on the front of the camera, blinking through the countdown */
+@keyframes camera-blink {
+  0%,
+  100% {
+    background: #3a3a3a;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    background: #f4f1ea;
+    box-shadow: 0 0 6px 2px rgba(255, 248, 230, 0.7);
+  }
+}
