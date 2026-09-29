@@ -116,6 +116,8 @@ const CENTER: Slot = { x: 50, y: 50, r: -2 };
 const PHOTO_RATIO = 1.155;
 const TAPES = ["paper", "smoke"] as const;
 const SPRING = { type: "spring", stiffness: 110, damping: 17 } as const;
+/** The fingertip shows the rubbing on this many prints; after that she knows */
+const RUB_LESSONS = 3;
 
 const wait = (ms: number) =>
   new Promise<void>((resolve) => window.setTimeout(resolve, ms));
@@ -526,22 +528,16 @@ export default function Darkroom() {
     setViewer(index);
   };
 
+  // Under the camera. No count and no "next one": she finds out how many frames there are, and that the
+  // last one is hers, by taking them; the fingertip on the first prints shows the rubbing
   const hint =
-    phase === "ready"
-      ? pinned === 0
-        ? `Tap the camera to take a photo · 1/${total}`
-        : `Tap the camera for the next one · ${pinned + 1}/${total}`
-      : phase === "turning" || phase === "camera" || phase === "returning"
-        ? null
-        : phase === "selfie"
-          ? fill(SELFIE.hint)
-          : phase === "ejecting"
-            ? "Printing…"
-            : phase === "developing"
-              ? "Rub the photo to develop it faster"
-              : developing && developing.index >= total && blank
-                ? "Not yet."
-                : "Lovely.";
+    phase === "selfie"
+      ? fill(SELFIE.hint)
+      : phase === "developed" || phase === "pinning"
+        ? developing && developing.index >= total && blank
+          ? "Not yet."
+          : "Lovely."
+        : null;
 
   const current: PhotoEntry | undefined = developing
     ? all[developing.index]
@@ -602,7 +598,7 @@ export default function Darkroom() {
         {/* The board the prints are pinned to: its size (cqw, cqh) sets the size of the prints */}
         <div
           ref={boardRef}
-          className="relative mx-3 mt-1 mb-1 flex-1 [container-type:size]"
+          className="relative mx-3 mt-1 flex-1 [container-type:size]"
         >
           <AnimatePresence>
             {pinned === 0 && !done && (
@@ -731,7 +727,7 @@ export default function Darkroom() {
                 <span className="dev-shine pointer-events-none absolute inset-0 z-3" />
               )}
             </Polaroid>
-            {phase === "developing" && !rubbed && developing.index === 0 && (
+            {phase === "developing" && !rubbed && developing.index < RUB_LESSONS && (
               // A fingertip rubbing to and fro: "rub it"
               <span
                 className="pointer-events-none absolute top-[40%] left-1/2 h-[34px] w-[34px] animate-[dev-rub_1.1s_ease-in-out_infinite] rounded-[50%] border-2 border-white/90 bg-white/28 shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
@@ -983,7 +979,8 @@ function CameraBack({
           Instant · Auto
         </span>
         {/* The film door: a raised panel with their names written on it, and a latch */}
-        <span className="camera-door absolute top-[38%] right-[6%] bottom-[8%] left-[6%] z-1 rounded-lg ">
+        {/* The film door sits clear of the viewfinder above it (which ends at about 34% of the height) */}
+        <span className="camera-door absolute top-[41%] right-[6%] bottom-[8%] left-[6%] z-1 rounded-lg ">
           <span className="absolute bottom-[11%] left-[7%] font-script text-[20px] leading-[1.2] whitespace-nowrap text-[#c4c2bc]">
             {content.darkroom.cameraName}
           </span>

@@ -102,9 +102,10 @@ export const content: Content = {
   },
 
   darkroom: {
-    title: "The year in eight frames",
+    // No number anywhere here: how many frames there are, and whose the last one is, stays a surprise
+    title: "The year, frame by frame",
     emptyBoard:
-      "Eight frames from the past year.\nPress the shutter to develop them.",
+      "The past year is still in the camera.\nPress the shutter.",
     arrangeHint: "Drag the prints anywhere you like",
     outro: "Tap a picture to read the back",
     gridHint: "Drag a print by its border to rearrange",
