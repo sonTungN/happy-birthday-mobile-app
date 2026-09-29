@@ -34,7 +34,7 @@ Add these to the URL:
 
 - `?chapter=news` jumps to a chapter. The ids are `lock`, `invite`, `news`, `darkroom`, `candles` and `finale`; `cake` and `letter` jump into the middle of the candles scene.
 - `?reset` starts over, as if she had never opened it.
-- `?nocountdown` skips the countdown on the deployed site. `?countdown` shows it in dev. For a test build that never shows it (a preview host that drops the query string): `VITE_SKIP_COUNTDOWN=1 npm run build`.
+- `?nocountdown` skips the countdown on the deployed site, and that browser remembers it. `?countdown` shows it in dev. On the phone (or the Home Screen app, which can't take a query string), tap the lock icon five times while it counts down and enter `previewCode` from `content.ts`: that device then skips the countdown too. `?reset` forgets it. For a test build that never shows it: `VITE_SKIP_COUNTDOWN=1 npm run build`.
 - `?debug&minrms=0.06&ratio=3.5` shows the mic level and lets you tune the blow detector.
 
 ## Make it yours

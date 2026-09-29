@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { content } from '../content'
 import { photoUrl } from '../lib/assets'
 import { audio } from '../lib/audio'
@@ -30,9 +30,9 @@ const twelveHour = (() => {
 })()
 
 const unlockAt = (() => {
-  // `npm run dev` skips the countdown (add ?countdown to see it); the real site always respects it
-  // Test builds (VITE_SKIP_COUNTDOWN=1 npm run build) skip it too: a hosted preview may not pass ?nocountdown through
-  if (!content.unlockAt || params.has('nocountdown') || import.meta.env.VITE_SKIP_COUNTDOWN === '1' || (import.meta.env.DEV && !params.has('countdown'))) return null
+  // `npm run dev` skips the countdown (add ?countdown to see it); the real site always respects it,
+  // except on a device that has entered the preview code (below) and in test builds (VITE_SKIP_COUNTDOWN=1)
+  if (!content.unlockAt || import.meta.env.VITE_SKIP_COUNTDOWN === '1' || (import.meta.env.DEV && !params.has('countdown'))) return null
   const date = new Date(content.unlockAt)
   return Number.isNaN(date.getTime()) ? null : date
 })()
@@ -47,8 +47,24 @@ export default function Lock({ onDone }: ChapterProps) {
   const [showHint, setShowHint] = useState(false)
   const [reply, setReply] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
-  const length = content.passcode.length
-  const waiting = unlockAt !== null && now.getTime() < unlockAt.getTime()
+  /** This device may go past the countdown (for testing before the day): ?nocountdown once, or the preview code */
+  const [preview, setPreview] = useState(() => storage.get('preview') === '1' || params.has('nocountdown'))
+  /** The preview code is being asked for */
+  const [asking, setAsking] = useState(false)
+  const knocks = useRef<number[]>([])
+  const waiting = unlockAt !== null && !preview && now.getTime() < unlockAt.getTime()
+  const length = (asking ? content.previewCode : content.passcode).length
+
+  // Five quick taps on the lock while it's counting down: the keypad asks for the preview code
+  const knock = () => {
+    if (!waiting || asking) return
+    const t = performance.now()
+    knocks.current = [...knocks.current.filter((k) => t - k < 2500), t]
+    if (knocks.current.length < 5) return
+    knocks.current = []
+    setCode('')
+    setAsking(true)
+  }
 
   const press = (digit: string) => {
     if (open || code.length >= length) return
@@ -56,6 +72,20 @@ export default function Lock({ onDone }: ChapterProps) {
     const next = code + digit
     setCode(next)
     if (next.length < length) return
+    if (asking) {
+      if (next === content.previewCode) {
+        storage.set('preview', '1')
+        setPreview(true)
+        setAsking(false)
+        setCode('')
+        audio.sfx('unlock')
+      } else {
+        audio.sfx('error')
+        setShakes((s) => s + 1)
+        later(() => setCode(''), 420)
+      }
+      return
+    }
     if (next === content.passcode) {
       setOpen(true)
       storage.set('unlocked', '1')
@@ -86,30 +116,33 @@ export default function Lock({ onDone }: ChapterProps) {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,8,0.35)_0%,rgba(8,8,8,0.2)_40%,rgba(8,8,8,0.65)_100%)]" />
 
       <div className="relative mt-[calc(var(--safe-top)+64px)] flex flex-col items-center short:mt-[calc(var(--safe-top)+50px)]">
-        <svg className="mb-2.5 h-6 w-5 overflow-visible" viewBox="0 0 24 28" aria-hidden>
-          <motion.path
-            d="M7 13V9a5 5 0 0 1 10 0v4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.6"
-            strokeLinecap="round"
-            initial={false}
-            animate={open ? { y: -4, x: 4 } : { y: 0, x: 0 }}
-          />
-          <rect x="4" y="12" width="16" height="13" rx="3" fill="currentColor" />
-        </svg>
+        {/* The lock. Five quick taps on it during the countdown ask for the preview code (see `knock`) */}
+        <button type="button" className="mb-2.5 border-0 bg-transparent p-1 text-white" tabIndex={-1} aria-hidden onClick={knock}>
+          <svg className="h-6 w-5 overflow-visible" viewBox="0 0 24 28" aria-hidden>
+            <motion.path
+              d="M7 13V9a5 5 0 0 1 10 0v4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              initial={false}
+              animate={open ? { y: -4, x: 4 } : { y: 0, x: 0 }}
+            />
+            <rect x="4" y="12" width="16" height="13" rx="3" fill="currentColor" />
+          </svg>
+        </button>
         <p className="font-body text-[20px] italic opacity-92">{formatLockDate(now)}</p>
         <p className="mt-1.5 font-ui text-[clamp(66px,22vw,92px)] leading-none font-bold tabular-nums [text-shadow:0_2px_20px_rgba(0,0,0,0.3)] short:text-[64px]">
           {formatClock(now, twelveHour)}
         </p>
       </div>
 
-      {waiting && unlockAt ? (
+      {waiting && unlockAt && !asking ? (
         <Countdown ms={unlockAt.getTime() - now.getTime()} until={unlockAt} />
       ) : (
         <div className="relative mt-auto mb-[calc(var(--safe-bottom)+26px)] flex w-full flex-col items-center gap-[18px] short:gap-3.5">
           <AnimatePresence mode="wait">
-            {showHint && (
+            {showHint && !asking && (
               <motion.p
                 key={reply ?? 'hint'}
                 className="absolute right-6 bottom-[calc(100%+14px)] left-6 rounded-[3px] bg-bone px-4 py-3 text-center font-body text-[18px] text-ink italic shadow-[4px_4px_0_rgba(0,0,0,0.5)]"
@@ -118,7 +151,7 @@ export default function Lock({ onDone }: ChapterProps) {
               </motion.p>
             )}
           </AnimatePresence>
-          <p className={PROMPT}>{open ? 'Unlocked' : 'Enter Passcode'}</p>
+          <p className={PROMPT}>{asking ? 'Preview code' : open ? 'Unlocked' : 'Enter Passcode'}</p>
           <motion.div
             key={shakes}
             className="flex h-3.5 gap-[22px]"
@@ -136,16 +169,29 @@ export default function Lock({ onDone }: ChapterProps) {
             {KEYS.map(([digit, letters]) => (
               <Key key={digit} digit={digit} letters={letters} onPress={press} />
             ))}
-            <button
-              type="button"
-              className={TEXT_KEY}
-              onClick={() => {
-                setReply(null)
-                setShowHint((v) => !v || reply !== null)
-              }}
-            >
-              Hint
-            </button>
+            {asking ? (
+              <button
+                type="button"
+                className={TEXT_KEY}
+                onClick={() => {
+                  setAsking(false)
+                  setCode('')
+                }}
+              >
+                Cancel
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={TEXT_KEY}
+                onClick={() => {
+                  setReply(null)
+                  setShowHint((v) => !v || reply !== null)
+                }}
+              >
+                Hint
+              </button>
+            )}
             <Key digit="0" letters="" onPress={press} />
             <button type="button" className={TEXT_KEY} onClick={erase} disabled={!code}>
               Delete

@@ -71,6 +71,8 @@ export interface Content {
   unlockAt: string | null
   passcode: string
   passcodeHint: string
+  /** For testing before `unlockAt`: five quick taps on the lock during the countdown, then this code, and that device skips the countdown */
+  previewCode: string
   /** Wrong passcodes that get their own reply instead of the plain hint */
   passcodeReplies: Record<string, string>
   lockPhoto: string

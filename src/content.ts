@@ -27,6 +27,8 @@ export const content: Content = {
 
   passcode: '2110', // her birthday: day + month
   passcodeHint: 'The day and month you arrived. Day first.',
+  // Yours, for testing before the day: tap the lock icon five times while it counts down and enter this
+  previewCode: '1901',
   passcodeReplies: {
     '2010': 'Close. That is Women’s Day, and it belongs to every woman in the country. Try the day that is only yours.',
     '1021': 'Day first, then month. We do things properly here.',

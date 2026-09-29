@@ -33,7 +33,10 @@ function initialState(): { index: number; resume: boolean } {
     storage.remove('chapter')
     storage.remove('unlocked')
     storage.remove('darkroom')
+    storage.remove('preview')
   }
+  // Skipping the countdown for testing is remembered on this device (see Lock.tsx)
+  if (params.has('nocountdown')) storage.set('preview', '1')
   const asked = params.get('chapter') ?? ''
   const forced = CHAPTERS.indexOf(ALIASES[asked] ?? (asked as ChapterId))
   if (forced >= 0) return { index: forced, resume: forced >= 2 }

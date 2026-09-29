@@ -78,6 +78,12 @@
     height: 100%;
   }
 
+  /* The page behind the app is as dark as the app: an installed web app on iOS paints any strip it leaves
+     uncovered (under the home indicator) with this colour, and it was white */
+  html {
+    background: #0b0b0b;
+  }
+
   body {
     background: radial-gradient(1100px 800px at 50% 30%, #3a3937 0%, #1b1b1b 50%, #0b0b0b 100%) fixed;
     color: var(--color-white);

@@ -72,8 +72,8 @@ export default function Invite({ onDone }: ChapterProps) {
         {accepted && <Seal className="absolute bottom-2 left-1/2 -ml-[35px] h-[70px] w-[70px] text-paper/94" word={invite.approved} ring={fill(invite.sealRing)} delay={0.1} />}
       </motion.div>
 
-      {/* The two buttons share the width of the notice above them */}
-      <motion.div className="mt-[22px] flex w-full max-w-[350px] gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+      {/* The two buttons share the width of the notice above them; when Appeal goes, it folds away and Accept widens with it */}
+      <motion.div className="mt-[22px] flex w-full max-w-[350px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
         <motion.button
           ref={(el) => {
             acceptRef.current = el
@@ -92,8 +92,8 @@ export default function Invite({ onDone }: ChapterProps) {
             <motion.button
               type="button"
               ref={hapticRef}
-              className="btn btn-outline flex-1"
-              exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.35 } }}
+              className="btn btn-outline ml-3 min-w-0 flex-1 overflow-hidden"
+              exit={{ opacity: 0, flexGrow: 0, width: 0, marginLeft: 0, paddingLeft: 0, paddingRight: 0, borderWidth: 0, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } }}
               onClick={appeal}
             >
               {invite.appeal}
