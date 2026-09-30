@@ -215,25 +215,26 @@ export function ScratchCard({
             <p className={`${NOTE} text-silver`}>
               {formatShortDate(face.event.date)} · {face.event.time}
             </p>
-            {revealed && (
-              <motion.button
-                type="button"
-                // A small underlined line, not a big button
-                className="mt-2 animate-[ticket-beckon_2.2s_ease-in-out_infinite] rounded-none border-0 border-b border-bone/70 bg-transparent px-0.5 pt-1 pb-0.5 font-ui text-[9px] font-bold tracking-[0.16em] whitespace-nowrap text-bone uppercase"
-                onClick={onOpen}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                Click for details
-              </motion.button>
-            )}
           </>
         )}
         <div
           className={`mt-auto flex w-full justify-end gap-1.5 border-t border-dashed pt-2 font-ui text-[8.5px] font-bold tracking-[0.12em] uppercase ${feature ? "border-bone/35 text-silver" : "border-ink/35 text-smoke"}`}
         >
-          <span>{fill("For {name}")}</span>
+          {feature && revealed ? (
+            // The way in to the invitation: a small underlined line in the footer, clear of the seal in the other corner
+            <motion.button
+              type="button"
+              className="animate-[ticket-beckon_2.2s_ease-in-out_infinite] rounded-none border-0 border-b border-bone/70 bg-transparent p-0 pb-px font-ui text-[8.5px] font-bold tracking-[0.12em] whitespace-nowrap text-bone uppercase"
+              onClick={onOpen}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              Tap for details
+            </motion.button>
+          ) : (
+            <span>{fill("For {name}")}</span>
+          )}
         </div>
         {/* The round seal, bottom-left corner, over the dashed rule */}
         {revealed && (

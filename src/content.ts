@@ -51,7 +51,7 @@ export const content: Content = {
       "Twenty-one has been used in full.",
       "The candles have already been made.",
       "The court notes that you look very well for {ageWords}.",
-      "The court is adjourned. Further appeals will not be heard.",
+      "The office is closed. Further appeals will not be heard.",
     ],
     denied: "DENIED",
     approved: "APPROVED",

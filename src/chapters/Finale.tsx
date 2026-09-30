@@ -72,7 +72,7 @@ export default function Finale({ onDone, onRestart }: FinaleProps) {
     setInvitation(true);
   };
 
-  // Found on the first pick, the invitation waits (she can open it with "Click for details").
+  // Found on the first pick, the invitation waits (she can open it with "Tap for details").
   // Once both picks are done, it opens on its own, unless she has already read it.
   useEffect(() => {
     if (!allPicked || !eventRevealed || invitationSeen) return;
@@ -264,50 +264,53 @@ function Credits({ onDone }: { onDone: () => void }) {
       onPointerLeave={() => speed(1)}
       onContextMenu={(e) => e.preventDefault()}
     >
-      {/* Starts below the screen and rolls up at CREDITS_SPEED (--from, --to and --duration are measured above) */}
-      <div
-        ref={listRef}
-        className={`absolute top-0 right-0 left-0 flex flex-col items-center gap-[30px] px-7 text-center [transform:translateY(100vh)] ${roll ? "animate-[credits-roll_var(--duration)_linear_forwards]" : ""}`}
-        style={roll ?? undefined}
-        onAnimationEnd={onDone}
-      >
-        {/* The studio's ident opens the picture */}
-        <div className="mb-[14px] flex flex-col items-center gap-3">
-          <StudioMark className="h-[96px] w-[96px] text-bone" />
-          <span className="font-ui text-[12px] font-bold tracking-[0.3em] text-silver uppercase">
-            {studio.name} {studio.kind}
-          </span>
-          <span className="-mt-1.5 font-body text-[19px] text-silver italic">
-            presents
-          </span>
-        </div>
-        <p className="font-display text-[30px] leading-[1.15] font-bold">
-          {fill("{fullName}")}
-        </p>
-        <p className="-mt-[22px] mb-[26px] font-script text-[34px] text-silver">
-          {titleCase(fill("in {AgeWords}"))}
-        </p>
-        {finale.credits.map((credit, i) => (
-          <div key={i} className="flex flex-col gap-1.5">
-            <span className="font-ui text-[11px] font-bold tracking-[0.24em] text-silver uppercase">
-              {fill(credit.role)}
+      {/* The roll fades in at the bottom and out at the top, so no line collides with the controls or the "hold" label */}
+      <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent_0,#000_15%,#000_86%,transparent_100%)]">
+        {/* Starts below the screen and rolls up at CREDITS_SPEED (--from, --to and --duration are measured above) */}
+        <div
+          ref={listRef}
+          className={`absolute top-0 right-0 left-0 flex flex-col items-center gap-[30px] px-7 text-center [transform:translateY(100vh)] ${roll ? "animate-[credits-roll_var(--duration)_linear_forwards]" : ""}`}
+          style={roll ?? undefined}
+          onAnimationEnd={onDone}
+        >
+          {/* The studio's ident opens the picture */}
+          <div className="mb-[14px] flex flex-col items-center gap-3">
+            <StudioMark className="h-[96px] w-[96px] text-bone" />
+            <span className="font-ui text-[12px] font-bold tracking-[0.3em] text-silver uppercase">
+              {studio.name} {studio.kind}
             </span>
-            <span className="font-body text-[23px] leading-[1.25]">
-              {fill(credit.name)}
+            <span className="-mt-1.5 font-body text-[19px] text-silver italic">
+              presents
             </span>
           </div>
-        ))}
-        <p className="mt-[30px] max-w-[280px] font-body text-[17px] text-silver italic">
-          {fill(finale.creditsNote)}
-        </p>
-        {/* The studio signs off */}
-        <div className="mt-2 flex flex-col items-center gap-2.5 pb-5">
-          <StudioMark className="h-[46px] w-[46px] text-silver" />
-          {studio.handle && (
-            <span className="font-ui text-[11px] tracking-[0.2em] text-silver">
-              {studio.handle}
-            </span>
-          )}
+          <p className="font-display text-[30px] leading-[1.15] font-bold">
+            {fill("{fullName}")}
+          </p>
+          <p className="-mt-[22px] mb-[26px] font-script text-[34px] text-silver">
+            {titleCase(fill("in {AgeWords}"))}
+          </p>
+          {finale.credits.map((credit, i) => (
+            <div key={i} className="flex flex-col gap-1.5">
+              <span className="font-ui text-[11px] font-bold tracking-[0.24em] text-silver uppercase">
+                {fill(credit.role)}
+              </span>
+              <span className="font-body text-[23px] leading-[1.25]">
+                {fill(credit.name)}
+              </span>
+            </div>
+          ))}
+          <p className="mt-[30px] max-w-[280px] font-body text-[17px] text-silver italic">
+            {fill(finale.creditsNote)}
+          </p>
+          {/* The studio signs off */}
+          <div className="mt-2 flex flex-col items-center gap-2.5 pb-5">
+            <StudioMark className="h-[46px] w-[46px] text-silver" />
+            {studio.handle && (
+              <span className="font-ui text-[11px] tracking-[0.2em] text-silver">
+                {studio.handle}
+              </span>
+            )}
+          </div>
         </div>
       </div>
       <span className="absolute right-[18px] bottom-[calc(var(--safe-bottom)+16px)] font-ui text-[10px] font-bold tracking-[0.2em] text-white/45 uppercase">

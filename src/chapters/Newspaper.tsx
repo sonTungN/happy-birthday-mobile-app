@@ -567,7 +567,8 @@ function MovingPicture({
       </div>
       {/* The frame floats right and the type runs down its left and on under it, the way a paper sets a picture */}
       <div className="mt-1 flow-root">
-        <figure className="float-right mt-1.5 mr-0 mb-1 ml-3.5 w-[56%]">
+        {/* Above the paragraphs (they are positioned, and their boxes run on under the float), so the tap lands here */}
+        <figure className="relative z-10 float-right mt-1.5 mr-0 mb-1 ml-3.5 w-[56%]">
           {/* Framed and printed in halftone like a press photo, but it moves (effects.css: .news-moving) */}
           {/* A plain block takes the tap (a video inside a button can swallow it on iOS); the video gets none */}
           <div
